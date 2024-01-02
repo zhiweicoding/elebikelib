@@ -8,9 +8,6 @@ logging:
 server:
   port: 8082
 
-test:
-  zhang-san: 123abc
-
 spring:
   profiles:
     active: dev
@@ -20,10 +17,10 @@ spring:
   application:
     name: booklib
   datasource:
-    url: jdbc:mysql://81.70.183.233:3306/books?useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://{host}:{port}/books?useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: root
-    password: csdiao210!
+    username:
+    password:
     hikari:
       connection-timeout: 10000
       validation-timeout: 3000
@@ -33,20 +30,6 @@ spring:
       maximum-pool-size: 10
       minimum-idle: 5
       read-only: false
-  freemarker:
-    template-loader-path: classpath:/templates/
-    suffix: .ftl
-    # 指定字符集
-    charset: utf-8
-    # 指定是否要启用缓存
-    cache: false
-    #指定是否要暴露请求和会话属性
-    expose-request-attributes: true
-    expose-session-attributes: true
-    request-context-attribute: request
-    settings:
-      template_update_delay: 0
-      number_format: 0.##
   config:
     activate:
       on-profile:
@@ -60,9 +43,9 @@ spring:
         max-idle: 8 # 连接池最大空闲连接数
         min-idle: 0 # 连接池最小空闲连接数
         max-wait: -1ms # 连接池最大阻塞等待时间，负值表示没有限制
-    host: 81.70.183.233
-    port: 6379
-    password: csdiao210
+    host: {host}
+    port: {port}
+    password:
 
 
 mybatis-plus:
@@ -70,8 +53,8 @@ mybatis-plus:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 cos:
-  secretId: AKIDEI7f0A5mERQAfute9PQDk24pKabeV5OQ
-  secretKey: nRq0tXv3vXswkIYXFgqiJdgT6WfW7RVI
-  region: ap-shanghai
-  bucket: booklib-1309974988
-  baseUrl: https://booklib-1309974988.cos.ap-shanghai.myqcloud.com/
+  secretId:
+  secretKey:
+  region:
+  bucket:
+  baseUrl:

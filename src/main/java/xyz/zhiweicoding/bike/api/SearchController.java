@@ -29,7 +29,9 @@ public class SearchController {
      * @param params {@link SearchVo}
      * @return
      */
-    @Cacheable(value = "15m", key = "#fId", unless = "#result == null")
+    @Cacheable(value = "15m", keyGenerator = "cacheJsonKeyGenerator",
+            condition = "#params != null",
+            unless = "#result == null || #result.isEmpty()")
     @PostMapping("/query")
     public
     @ResponseBody
