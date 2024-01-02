@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 import xyz.zhiweicoding.bike.entity.api.IndexEntity;
+import xyz.zhiweicoding.bike.entity.api.SearchEntity;
+import xyz.zhiweicoding.bike.entity.api.SearchRedirectEntity;
 import xyz.zhiweicoding.bike.models.BaseResponse;
 import xyz.zhiweicoding.bike.support.ResponseFactory;
 import xyz.zhiweicoding.bike.vo.api.SearchVo;
@@ -23,31 +25,62 @@ public class SearchController {
 //    private IGoodService goodService;
 
     /**
-     * 获取首页信息
+     * 查询页查询动作
      * 15 min cache
      *
      * @param params {@link SearchVo}
      * @return
      */
     @Cacheable(value = "15m", keyGenerator = "cacheJsonKeyGenerator",
-            condition = "#params != null",
-            unless = "#result == null || #result.isEmpty()")
+            condition = "#params != null", unless = "#result == null || #result.isEmpty()")
     @PostMapping("/query")
-    public
-    @ResponseBody
-    BaseResponse<IndexEntity> query(@RequestBody SearchVo params) {
+    public BaseResponse<SearchEntity> query(@RequestBody SearchVo params) {
         log.debug("查询页默认查询,入参 : {}", JSON.toJSONString(params));
         try {
-//            IndexSendBean resultSendBean = goodService.getIndex(paramsBean);
-//            log.debug("获取首页信息succee");
-//            return ResponseFactory.success(resultSendBean);
             return ResponseFactory.success(null);
         } catch (Exception e) {
-            log.error("获取首页接口报错：" + e.getMessage(), e);
-//            sendBean = factory.getMsgFactory(StatusEnum.fail, null);
+            log.error("查询页默认查询,报错：" + e.getMessage(), e);
             return ResponseFactory.fail(null);
         }
     }
 
+    /**
+     * 查询页，提示信息
+     * 15 min cache
+     *
+     * @param params {@link SearchVo}
+     * @return
+     */
+    @Cacheable(value = "15m", keyGenerator = "cacheJsonKeyGenerator",
+            condition = "#params != null", unless = "#result == null || #result.isEmpty()")
+    @PostMapping("/help")
+    public BaseResponse<SearchEntity.KeywordBean> help(@RequestBody SearchVo params) {
+        log.debug("查询页，提示信息查询,入参 : {}", JSON.toJSONString(params));
+        try {
+            return ResponseFactory.success(null);
+        } catch (Exception e) {
+            log.error("查询页，提示信息查询,报错：" + e.getMessage(), e);
+            return ResponseFactory.fail(null);
+        }
+    }
 
+    /**
+     * 查询页跳转链接
+     * 15 min cache
+     *
+     * @param params {@link SearchVo}
+     * @return
+     */
+    @Cacheable(value = "15m", keyGenerator = "cacheJsonKeyGenerator",
+            condition = "#params != null", unless = "#result == null || #result.isEmpty()")
+    @PostMapping("/redirect")
+    public BaseResponse<SearchRedirectEntity> redirect(@RequestBody SearchVo params) {
+        log.debug("查询页跳转链接查询,入参 : {}", JSON.toJSONString(params));
+        try {
+            return ResponseFactory.success(null);
+        } catch (Exception e) {
+            log.error("查询页跳转链接查询,报错：" + e.getMessage(), e);
+            return ResponseFactory.fail(null);
+        }
+    }
 }
