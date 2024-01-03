@@ -49,11 +49,6 @@ public class CatalogController {
         log.debug("获取目录页的信息,入参 : {}", JSON.toJSONString(param));
         try {
             log.debug("获取目录页的信息 success");
-            SearchRequest searchRequest = new SearchRequest("query_s0*");
-            SearchResponse search = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
-            for (SearchHit hit : search.getHits().getHits()) {
-                log.info(hit.getSourceAsString());
-            }
             CatalogEntity catalog = goodService.getCatalog(param);
             BaseResponse<CatalogEntity> success = ResponseFactory.success(catalog);
             success.setMsgBodySize(1);
