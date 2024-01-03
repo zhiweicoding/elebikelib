@@ -1,11 +1,11 @@
 package xyz.zhiweicoding.bike.config;
 
+import jakarta.servlet.MultipartConfigElement;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.util.unit.DataSize;
 
-import javax.servlet.MultipartConfigElement;
 
 /**
  * @Created by zhiwei on 2022/3/23.
