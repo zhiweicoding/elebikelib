@@ -23,16 +23,8 @@ import java.io.IOException;
 @Slf4j
 public class VerifyController {
 
-    @RequestMapping(value = "/{path}/{fileName}",
-            method = {RequestMethod.POST,
-                    RequestMethod.HEAD,
-                    RequestMethod.OPTIONS,
-                    RequestMethod.PUT,
-                    RequestMethod.PATCH,
-                    RequestMethod.GET}
-    )
-    public ResponseEntity<InputStreamResource> path(@PathVariable String path, @PathVariable String fileName)
-            throws IOException {
+    @RequestMapping(value = "/{path}/{fileName}", method = {RequestMethod.POST, RequestMethod.HEAD, RequestMethod.OPTIONS, RequestMethod.PUT, RequestMethod.PATCH, RequestMethod.GET})
+    public ResponseEntity<InputStreamResource> path(@PathVariable String path, @PathVariable String fileName) throws IOException {
         FileSystemResource file = new FileSystemResource("/" + path + "/" + fileName);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
@@ -46,6 +38,5 @@ public class VerifyController {
                 .contentType(MediaType.parseMediaType("application/octet-stream"))
                 .body(new InputStreamResource(file.getInputStream()));
     }
-
 
 }

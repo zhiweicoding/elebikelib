@@ -36,9 +36,7 @@ public class CatalogController {
      */
     @Cacheable(value = "30m", keyGenerator = "cacheJsonKeyGenerator", condition = "#param != null", unless = "#result == null || #result.isEmpty()")
     @PostMapping("/query")
-    public
-    @ResponseBody
-    BaseResponse<CatalogEntity> query(@RequestBody CatalogVo param) {
+    public BaseResponse<CatalogEntity> query(@RequestBody CatalogVo param) {
         log.debug("获取目录页的信息,入参 : {}", JSON.toJSONString(param));
         try {
             log.debug("获取目录页的信息 success");
