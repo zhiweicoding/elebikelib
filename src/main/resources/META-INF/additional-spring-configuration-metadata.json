@@ -99,6 +99,26 @@
       "name": "easy-es.maxConnPerRoute",
       "type": "java.lang.String",
       "description": "最大连接路由数 单位:个"
+    },
+    {
+      "name": "elasticsearch.urls",
+      "type": "java.lang.String",
+      "description": "es链接地址,如果是集群则可用逗号隔开"
+    },
+    {
+      "name": "elasticsearch.auth.password",
+      "type": "java.lang.String",
+      "description": "es password"
+    },
+    {
+      "name": "elasticsearch.auth.username",
+      "type": "java.lang.String",
+      "description": "es username"
+    },
+    {
+      "name": "elasticsearch.auth.enable",
+      "type": "java.lang.String",
+      "description": "es enable"
     }
   ]
 }

@@ -1,8 +1,8 @@
 package xyz.zhiweicoding.bike.config;
 
 import cn.hutool.crypto.digest.MD5;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONWriter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.interceptor.KeyGenerator;
 
@@ -42,9 +42,9 @@ public class JsonKeyGenerator implements KeyGenerator {
                 }
             }
             String jsonString = JSON.toJSONString(objArray,
-                    SerializerFeature.WriteMapNullValue,
-                    SerializerFeature.WriteNullListAsEmpty,
-                    SerializerFeature.WriteNullStringAsEmpty);
+                    JSONWriter.Feature.WriteMapNullValue,
+                    JSONWriter.Feature.WriteNullListAsEmpty,
+                    JSONWriter.Feature.WriteNullStringAsEmpty);
             log.debug("Json redis cache handler jsonString:{}", jsonString);
             if (jsonString.isEmpty()) {
                 return "NULL";

@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,10 +22,10 @@ public class SearchEntity implements Serializable {
     @Serial
     private static final long serialVersionUID = -6996469894213879455L;
 
-    private List<KeywordBean> helpKeywords;
-    private List<KeywordBean> historyKeyword;
-    private List<KeywordBean> hotKeywords;
-    private DefaultKeyword defaultKeyword;
+    private List<KeywordBean> helpKeywords = new ArrayList<>();
+    private List<KeywordBean> historyKeyword = new ArrayList<>();
+    private List<KeywordBean> hotKeywords = new ArrayList<>();
+    private DefaultKeyword defaultKeyword = new DefaultKeyword();
 
     @Data
     @NoArgsConstructor
