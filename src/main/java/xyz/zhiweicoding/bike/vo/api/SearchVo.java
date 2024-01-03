@@ -20,6 +20,5 @@ public class SearchVo implements Serializable {
     private static final long serialVersionUID = -322348262627263L;
 
     private String keyword;
-    private String typeId;
     private String keywordId;
 }

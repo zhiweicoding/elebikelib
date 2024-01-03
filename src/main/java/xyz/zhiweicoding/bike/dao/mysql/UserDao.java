@@ -1,8 +1,8 @@
 package xyz.zhiweicoding.bike.dao.mysql;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import xyz.zhiweicoding.bike.models.UserBean;
 import org.springframework.stereotype.Component;
+import xyz.zhiweicoding.bike.models.UserBean;
 
 /**
 * @author zhiwei

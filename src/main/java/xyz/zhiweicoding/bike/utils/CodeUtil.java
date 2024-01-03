@@ -10,7 +10,7 @@ import java.util.Random;
 /**
  * Created by zhiwei on 17-7-24.
  */
-public class CodeUtils {
+public class CodeUtil {
 
     @Data
     public static class CodeEntity {
@@ -18,14 +18,14 @@ public class CodeUtils {
         private String code;
     }
 
-    private CodeUtils() {
+    private CodeUtil() {
     }
 
     private static class CodeUtilsHolder {
-        private static CodeUtils codeUtils = new CodeUtils();
+        private static CodeUtil codeUtils = new CodeUtil();
     }
 
-    public static CodeUtils getInstance() {
+    public static CodeUtil getInstance() {
         return CodeUtilsHolder.codeUtils;
     }
 

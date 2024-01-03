@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author zhiweicoding.xyz
@@ -19,18 +20,18 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName("t_config")
-public class ConfigBean implements Serializable {
+@TableName("t_symbol")
+public class SymbolBean implements Serializable {
     @Serial
     @TableField(exist = false)
-    private static final long serialVersionUID = 1234567896L;
+    private static final long serialVersionUID = 1L;
     @TableId(type = IdType.ASSIGN_UUID)
-    private int configId;
-    private String configContent;
-    private String configMsg;
-    private int configType;
+    private String symbolId;
+    private String symbolName;
+    private int sortNum;
+    private int isPopular;
     private long createTime;
     private long modifyTime;
     private int isDelete;
-
+    private List<GoodBean> goodBeans;
 }

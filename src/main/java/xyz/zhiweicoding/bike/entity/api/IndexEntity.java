@@ -3,8 +3,10 @@ package xyz.zhiweicoding.bike.entity.api;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import xyz.zhiweicoding.bike.models.GoodBean;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,17 +20,17 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class IndexEntity implements Serializable {
-    private List<GoodEntity> hotGoods;
-    private List<GoodEntity> newGoods;
-    private List<GoodEntity> brands;
+    private List<GoodBean> hotGoods = new ArrayList<>();
+    private List<GoodBean> newGoods = new ArrayList<>();
+    private List<GoodBean> brands=new ArrayList<>();
     private List<FloorGood> floorGoods;
-    private List<GoodEntity> topics;
+    private List<GoodBean> topics;
     private List<Banner> banners;
 
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    private static class Banner implements Serializable {
+    public static class Banner implements Serializable {
         private String id;
         private String link;
         private String imageUrl;
@@ -40,6 +42,6 @@ public class IndexEntity implements Serializable {
     public static class FloorGood implements Serializable {
         private String id;
         private String name;
-        private List<GoodEntity> goodsList;
+        private List<GoodBean> goodsList;
     }
 }

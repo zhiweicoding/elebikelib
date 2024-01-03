@@ -1,7 +1,7 @@
 package xyz.zhiweicoding.bike.support;
 
 import lombok.Getter;
-import xyz.zhiweicoding.bike.models.BaseResponse;
+import xyz.zhiweicoding.bike.entity.BaseResponse;
 
 /**
  * @Created by zhiwei on 2022/3/27.

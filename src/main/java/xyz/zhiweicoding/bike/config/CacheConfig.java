@@ -14,10 +14,7 @@ import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.cache.RedisCacheWriter;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.RedisSerializationContext;
-import org.springframework.data.redis.serializer.RedisSerializer;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.data.redis.serializer.*;
 
 import java.time.Duration;
 import java.util.LinkedHashMap;
@@ -44,6 +41,7 @@ public class CacheConfig {
                 .disableCachingNullValues()
                 // 设置缓存名称前缀
                 .prefixCacheNameWith("default_1h:");
+        RedisCacheConfiguration h1 = RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofHours(1)).serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(stringRedisSerializer)).serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jsonSerializer())).disableCachingNullValues().prefixCacheNameWith("srw_");
         RedisCacheConfiguration m30 = RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(30)).serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(stringRedisSerializer)).serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jsonSerializer())).disableCachingNullValues().prefixCacheNameWith("srw_");
         RedisCacheConfiguration m15 = RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(15)).serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(stringRedisSerializer)).serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jsonSerializer())).disableCachingNullValues().prefixCacheNameWith("srw_");
         RedisCacheConfiguration d30 = RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofDays(30)).serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(stringRedisSerializer)).serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jsonSerializer())).disableCachingNullValues().prefixCacheNameWith("srw_");
@@ -60,6 +58,7 @@ public class CacheConfig {
                 put("15m", m15);
                 put("30m", m30);
                 put("24h", h24);
+                put("1h", h1);
                 put("30d", d30);
                 put("default", default1h);
             }
@@ -87,14 +86,10 @@ public class CacheConfig {
     }
 
     private RedisSerializer<Object> jsonSerializer() {
-        Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(Object.class);
-
-        // 解决查询缓存转换异常的问题
         ObjectMapper om = new ObjectMapper();
         om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
         om.activateDefaultTyping(LaissezFaireSubTypeValidator.instance, ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
-        jackson2JsonRedisSerializer.setObjectMapper(om);
-        return jackson2JsonRedisSerializer;
+        return new GenericJackson2JsonRedisSerializer(om);
     }
 
     @Bean

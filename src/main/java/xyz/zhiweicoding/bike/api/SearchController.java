@@ -4,10 +4,9 @@ import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
-import xyz.zhiweicoding.bike.entity.api.IndexEntity;
 import xyz.zhiweicoding.bike.entity.api.SearchEntity;
 import xyz.zhiweicoding.bike.entity.api.SearchRedirectEntity;
-import xyz.zhiweicoding.bike.models.BaseResponse;
+import xyz.zhiweicoding.bike.entity.BaseResponse;
 import xyz.zhiweicoding.bike.support.ResponseFactory;
 import xyz.zhiweicoding.bike.vo.api.SearchVo;
 
@@ -31,8 +30,7 @@ public class SearchController {
      * @param params {@link SearchVo}
      * @return
      */
-    @Cacheable(value = "15m", keyGenerator = "cacheJsonKeyGenerator",
-            condition = "#params != null", unless = "#result == null || #result.isEmpty()")
+    @Cacheable(value = "15m", keyGenerator = "cacheJsonKeyGenerator", condition = "#params != null", unless = "#result == null || #result.isEmpty()")
     @PostMapping("/query")
     public BaseResponse<SearchEntity> query(@RequestBody SearchVo params) {
         log.debug("查询页默认查询,入参 : {}", JSON.toJSONString(params));
@@ -51,8 +49,7 @@ public class SearchController {
      * @param params {@link SearchVo}
      * @return
      */
-    @Cacheable(value = "15m", keyGenerator = "cacheJsonKeyGenerator",
-            condition = "#params != null", unless = "#result == null || #result.isEmpty()")
+    @Cacheable(value = "15m", keyGenerator = "cacheJsonKeyGenerator", condition = "#params != null", unless = "#result == null || #result.isEmpty()")
     @PostMapping("/help")
     public BaseResponse<SearchEntity.KeywordBean> help(@RequestBody SearchVo params) {
         log.debug("查询页，提示信息查询,入参 : {}", JSON.toJSONString(params));
@@ -66,13 +63,10 @@ public class SearchController {
 
     /**
      * 查询页跳转链接
-     * 15 min cache
      *
      * @param params {@link SearchVo}
      * @return
      */
-    @Cacheable(value = "15m", keyGenerator = "cacheJsonKeyGenerator",
-            condition = "#params != null", unless = "#result == null || #result.isEmpty()")
     @PostMapping("/redirect")
     public BaseResponse<SearchRedirectEntity> redirect(@RequestBody SearchVo params) {
         log.debug("查询页跳转链接查询,入参 : {}", JSON.toJSONString(params));

@@ -34,8 +34,6 @@ public class MybatisPlusConfig {
 
             globalConfig.setDbConfig(new GlobalConfig.DbConfig().setColumnFormat("`%s`"));
 
-            globalConfig.setMetaObjectHandler(new MysqlMetaObjectHandler());
-
             MybatisConfiguration configuration = new MybatisConfiguration();
             configuration.setDefaultEnumTypeHandler(MybatisEnumTypeHandler.class);
 

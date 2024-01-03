@@ -3,6 +3,7 @@ package xyz.zhiweicoding.bike.entity.api;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import xyz.zhiweicoding.bike.models.GoodBean;
 
 import java.io.Serializable;
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CatalogEntity implements Serializable {
-    private List<GoodEntity> goodsList;
+    private List<GoodBean> goodsList;
     private boolean categoryFilter;
     private String currentSortType;
     private String currentSortOrder;

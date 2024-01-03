@@ -1,6 +1,6 @@
 package xyz.zhiweicoding.bike.api;
 
-import xyz.zhiweicoding.bike.models.BaseResponse;
+import xyz.zhiweicoding.bike.entity.BaseResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 

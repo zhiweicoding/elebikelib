@@ -8,15 +8,15 @@ import java.util.UUID;
 /**
  * @Created by zhiwei on 2022/4/2.
  */
-public class GeneratorUtils {
-    private GeneratorUtils() {
+public class GeneratorUtil {
+    private GeneratorUtil() {
     }
 
     private static class GeneratorUtilsHolder {
-        private static GeneratorUtils generatorUtils = new GeneratorUtils();
+        private static GeneratorUtil generatorUtils = new GeneratorUtil();
     }
 
-    public static GeneratorUtils getInstance() {
+    public static GeneratorUtil getInstance() {
         return GeneratorUtilsHolder.generatorUtils;
     }
 

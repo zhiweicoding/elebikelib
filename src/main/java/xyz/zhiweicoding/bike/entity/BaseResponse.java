@@ -1,4 +1,4 @@
-package xyz.zhiweicoding.bike.models;
+package xyz.zhiweicoding.bike.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

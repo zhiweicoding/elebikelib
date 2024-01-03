@@ -16,5 +16,4 @@ public class CatalogVo {
     private String sort;
     private String order;
     private String categoryId;
-    private String typeId;
 }

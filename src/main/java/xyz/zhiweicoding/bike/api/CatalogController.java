@@ -2,11 +2,14 @@ package xyz.zhiweicoding.bike.api;
 
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.weaver.ast.Var;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 import xyz.zhiweicoding.bike.entity.api.CatalogEntity;
-import xyz.zhiweicoding.bike.entity.api.IndexEntity;
-import xyz.zhiweicoding.bike.models.BaseResponse;
+import xyz.zhiweicoding.bike.entity.BaseResponse;
+import xyz.zhiweicoding.bike.services.GoodService;
 import xyz.zhiweicoding.bike.support.ResponseFactory;
 import xyz.zhiweicoding.bike.vo.api.CatalogVo;
 
@@ -20,28 +23,34 @@ import xyz.zhiweicoding.bike.vo.api.CatalogVo;
 @Slf4j
 public class CatalogController {
 
-//    @Resource
-//    private IGoodService goodService;
+    @Autowired
+    @Qualifier(value = "goodService")
+    private GoodService goodService;
 
     /**
      * 获取目录页的信息
      * 15 min cache
      *
-     * @param params {@link CatalogVo}
+     * @param param {@link CatalogVo}
      * @return
      */
-    @Cacheable(value = "15m", key = "#fId", unless = "#result == null")
+    @Cacheable(value = "30m", keyGenerator = "cacheJsonKeyGenerator", condition = "#param != null", unless = "#result == null || #result.isEmpty()")
     @PostMapping("/query")
     public
     @ResponseBody
-    BaseResponse<CatalogEntity> query(@RequestBody CatalogVo params) {
-        log.debug("获取目录页的信息,入参 : {}", JSON.toJSONString(params));
+    BaseResponse<CatalogEntity> query(@RequestBody CatalogVo param) {
+        log.debug("获取目录页的信息,入参 : {}", JSON.toJSONString(param));
         try {
             log.debug("获取目录页的信息 success");
-            return ResponseFactory.success(null);
+            CatalogEntity catalog = goodService.getCatalog(param);
+            BaseResponse<CatalogEntity> success = ResponseFactory.success(catalog);
+            success.setMsgBodySize(1);
+            return success;
         } catch (Exception e) {
-            log.error("获取首页接口报错：" + e.getMessage(), e);
-            return ResponseFactory.fail(null);
+            log.error("获取目录页的信息 error:{}：", e.getMessage(), e);
+            BaseResponse<CatalogEntity> fail = ResponseFactory.fail(null);
+            fail.setMsgBodySize(0);
+            return fail;
         }
     }
 

@@ -1,48 +1,53 @@
 package xyz.zhiweicoding.bike.api;
 
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import xyz.zhiweicoding.bike.entity.api.IndexEntity;
-import xyz.zhiweicoding.bike.models.BaseResponse;
+import xyz.zhiweicoding.bike.entity.BaseResponse;
+import xyz.zhiweicoding.bike.models.GoodBean;
+import xyz.zhiweicoding.bike.services.GoodService;
 import xyz.zhiweicoding.bike.support.ResponseFactory;
 import xyz.zhiweicoding.bike.vo.api.IndexVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-
 /**
  * 商品页
  *
- * @Created by zhiwei on 2022/3/11.
+ * @Created by zhiwei on 2024/1/1.
  */
 @RestController
 @RequestMapping(value = "/v1/api/good")
 @Slf4j
 public class GoodController {
 
-//    @Resource
-//    private IGoodService goodService;
+    @Autowired
+    @Qualifier(value = "goodService")
+    private GoodService goodService;
 
     /**
-     * 获取详情页信息
+     * 获取商品的详细信息
      * 15 min cache
      *
-     * @param request
-     * @param paramsBean {@link IndexVo}
+     * @param param {@link IndexVo}
      * @return
      */
-    @Cacheable(value = "15m", key = "#fId", unless = "#result == null")
+    @Cacheable(value = "60s", keyGenerator = "cacheJsonKeyGenerator", condition = "#param != null", unless = "#result == null || #result.isEmpty()")
     @PostMapping("/detail")
     public
     @ResponseBody
-    BaseResponse<IndexEntity> detail(HttpServletRequest request, @RequestBody IndexVo paramsBean) {
-        log.debug("获取首页信息,入参 : {}", JSON.toJSONString(paramsBean));
+    BaseResponse<GoodBean> detail(@RequestBody IndexVo param) {
+        log.debug("获取商品的详细信息,入参 : {}", JSON.toJSONString(param));
         try {
-            log.debug("获取首页信息 success");
-            return ResponseFactory.success(null);
+            GoodBean detail = goodService.getOne(Wrappers.<GoodBean>lambdaQuery().eq(GoodBean::getGoodId, param.getGoodId()));
+            log.debug("获取商品的详细信息 success");
+            return ResponseFactory.success(detail);
         } catch (Exception e) {
-            log.error("获取首页接口报错：" + e.getMessage(), e);
+            log.error("获取商品的详细信息 error：" + e.getMessage(), e);
             return ResponseFactory.fail(null);
         }
     }
