@@ -38,7 +38,7 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public SearchEntity getSearch(SearchVo param) {
+    public SearchEntity getSearch() {
         SearchEntity searchSendBean = new SearchEntity();
         List<SymbolBean> symbolAllList = symbolDao.selectList(Wrappers.<SymbolBean>lambdaQuery().eq(SymbolBean::getIsDelete, 0));
         if (!symbolAllList.isEmpty()) {

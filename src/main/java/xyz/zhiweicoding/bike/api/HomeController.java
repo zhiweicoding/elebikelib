@@ -5,10 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import xyz.zhiweicoding.bike.entity.BaseResponse;
 import xyz.zhiweicoding.bike.entity.api.IndexEntity;
 import xyz.zhiweicoding.bike.services.GoodService;
@@ -33,15 +30,14 @@ public class HomeController {
      * 获取首页信息
      * 30 min cache
      *
-     * @param param {@link IndexVo}
+     * @param timestamp {@link String}
      * @return {@link BaseResponse}
      */
-    @Cacheable(value = "30m", keyGenerator = "cacheJsonKeyGenerator", condition = "#param != null", unless = "#result == null || #result.getIsEmpty()")
+    @Cacheable(value = "30m", keyGenerator = "cacheJsonKeyGenerator", condition = "#timestamp != null", unless = "#result == null || #result.getIsEmpty()")
     @PostMapping("/query")
-    public BaseResponse<IndexEntity> query(@RequestBody IndexVo param) {
-        log.debug("获取首页信息,入参 : {}", JSON.toJSONString(param));
+    public BaseResponse<IndexEntity> query(@RequestParam String timestamp) {
         try {
-            IndexEntity entity = goodService.getIndex(param);
+            IndexEntity entity = goodService.getIndex();
             log.debug("获取首页信息,success");
             log.debug("获取首页信息,{}", entity);
             return ResponseFactory.success(entity);

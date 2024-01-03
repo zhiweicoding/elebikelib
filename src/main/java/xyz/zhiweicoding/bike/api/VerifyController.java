@@ -1,7 +1,8 @@
 package xyz.zhiweicoding.bike.api;
 
+import cn.hutool.core.io.FileUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.FileSystemResource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -10,7 +11,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import xyz.zhiweicoding.bike.utils.CosUtil;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -23,9 +26,13 @@ import java.io.IOException;
 @Slf4j
 public class VerifyController {
 
+    @Autowired
+    private CosUtil cosUtil;
+
     @RequestMapping(value = "/{path}/{fileName}", method = {RequestMethod.POST, RequestMethod.HEAD, RequestMethod.OPTIONS, RequestMethod.PUT, RequestMethod.PATCH, RequestMethod.GET})
     public ResponseEntity<InputStreamResource> path(@PathVariable String path, @PathVariable String fileName) throws IOException {
-        FileSystemResource file = new FileSystemResource("/" + path + "/" + fileName);
+        File tempFile = FileUtil.createTempFile();
+        cosUtil.download(path + "/" + fileName, tempFile.getPath());
         HttpHeaders headers = new HttpHeaders();
         headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
         headers.add("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
@@ -34,9 +41,9 @@ public class VerifyController {
         return ResponseEntity
                 .ok()
                 .headers(headers)
-                .contentLength(file.contentLength())
+                .contentLength(tempFile.length())
                 .contentType(MediaType.parseMediaType("application/octet-stream"))
-                .body(new InputStreamResource(file.getInputStream()));
+                .body(new InputStreamResource(FileUtil.getInputStream(tempFile)));
     }
 
 }

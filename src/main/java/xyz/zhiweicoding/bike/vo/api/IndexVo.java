@@ -16,8 +16,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Data
 public class IndexVo implements Serializable {
-    private String typeInt;
     private String goodId;
-    private String openId;
 
 }

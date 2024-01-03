@@ -3,39 +3,43 @@ package xyz.zhiweicoding.bike.api;
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import xyz.zhiweicoding.bike.entity.api.IndexEntity;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.*;
+import xyz.zhiweicoding.bike.dao.mysql.SymbolDao;
 import xyz.zhiweicoding.bike.entity.BaseResponse;
 import xyz.zhiweicoding.bike.models.GoodBean;
 import xyz.zhiweicoding.bike.models.SymbolBean;
 import xyz.zhiweicoding.bike.services.GoodService;
+import xyz.zhiweicoding.bike.services.SymbolService;
 import xyz.zhiweicoding.bike.support.ResponseFactory;
 import xyz.zhiweicoding.bike.utils.GeneratorUtil;
 import xyz.zhiweicoding.bike.vo.api.IndexVo;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 /**
- * 商品页
+ * 电动车分类接口
  *
  * @Created by zhiwei on 2024/1/1.
  */
 @RestController
-@RequestMapping(value = "/v1/api/good")
+@RequestMapping(value = "/v1/page/symbol")
 @Slf4j
-public class GoodController {
+public class SymbolPageController {
 
     @Autowired
     @Qualifier(value = "goodService")
     private GoodService goodService;
+
+    @Autowired
+    @Qualifier(value = "symbolService")
+    private SymbolService symbolService;
 
     /**
      * 获取商品的详细信息
@@ -60,36 +64,24 @@ public class GoodController {
         }
     }
 
+    /**
+     * 分类页面查询
+     *
+     * @param anyText {@link String}
+     * @return
+     */
+    @Cacheable(value = "30s", keyGenerator = "cacheJsonKeyGenerator", condition = "#anyText != null", unless = "#result == null || #result.getIsEmpty()")
     @PostMapping("/index")
-    public BaseResponse<Page<GoodBean>> index(String anyText, int current, int size, double priceMin, double priceMax, int isNew, int isCheap, int isChosen) {
+    public BaseResponse<List<SymbolBean>> index(String anyText) {
         try {
-            Page<GoodBean> page = new Page<>(current, size);
-            LambdaQueryWrapper<GoodBean> wrapper = Wrappers.<GoodBean>lambdaQuery().eq(GoodBean::getIsDelete, 0);
+            LambdaQueryWrapper<SymbolBean> wrapper = Wrappers.<SymbolBean>lambdaQuery()
+                    .eq(SymbolBean::getIsDelete, 0);
             if (!anyText.isEmpty()) {
-                wrapper.and(andWrapper -> andWrapper.like(GoodBean::getGoodTitle, anyText)
-                        .or()
-                        .like(GoodBean::getGoodBrief, anyText)
-                        .or()
-                        .like(GoodBean::getTagList, anyText));
+                wrapper.like(SymbolBean::getSymbolName, anyText);
             }
-            if (priceMin > 0) {
-                wrapper.ge(GoodBean::getRetailPrice, priceMin);
-            }
-            if (priceMax > 0) {
-                wrapper.le(GoodBean::getRetailPrice, priceMax);
-            }
-            if (isNew != -1) {
-                wrapper.eq(GoodBean::getIsNew, isNew);
-            }
-            if (isCheap != -1) {
-                wrapper.eq(GoodBean::getIsCheap, isCheap);
-            }
-            if (isChosen != -1) {
-                wrapper.eq(GoodBean::getIsChosen, isChosen);
-            }
-            Page<GoodBean> pageResult = goodService.page(page, wrapper);
-            BaseResponse<Page<GoodBean>> resp = ResponseFactory.success(pageResult);
-            resp.setMsgBodySize((int) pageResult.getPages());
+            List<SymbolBean> resultList = symbolService.list(wrapper);
+            BaseResponse<List<SymbolBean>> resp = ResponseFactory.success(resultList);
+            resp.setMsgBodySize(resultList.size());
             return resp;
         } catch (Exception e) {
             log.error("分类页面查询 error：" + e.getMessage(), e);
@@ -98,11 +90,11 @@ public class GoodController {
     }
 
     @PostMapping("/save")
-    public BaseResponse<String> save(GoodBean goodBean) {
+    public BaseResponse<String> save(SymbolBean symbolBean) {
         try {
-            goodBean.setGoodId(GeneratorUtil.getCommonId());
-            goodService.save(goodBean);
-            return ResponseFactory.success(goodBean.getGoodId());
+            symbolBean.setSymbolId(GeneratorUtil.getCommonId());
+            symbolService.save(symbolBean);
+            return ResponseFactory.success(symbolBean.getSymbolId());
         } catch (Exception e) {
             log.error("分类页面查询 error：" + e.getMessage(), e);
             return ResponseFactory.fail(null);
@@ -110,10 +102,10 @@ public class GoodController {
     }
 
     @PostMapping("/update")
-    public BaseResponse<String> update(GoodBean goodBean) {
+    public BaseResponse<String> update(SymbolBean symbolBean) {
         try {
-            goodService.update(goodBean, Wrappers.<GoodBean>lambdaUpdate().eq(GoodBean::getGoodId, goodBean.getGoodId()));
-            return ResponseFactory.success(goodBean.getGoodId());
+            symbolService.update(symbolBean, Wrappers.<SymbolBean>lambdaUpdate().eq(SymbolBean::getSymbolId, symbolBean.getSymbolId()));
+            return ResponseFactory.success(symbolBean.getSymbolId());
         } catch (Exception e) {
             log.error("分类页面查询 error：" + e.getMessage(), e);
             return ResponseFactory.fail(null);
@@ -123,9 +115,9 @@ public class GoodController {
     @PostMapping("/remove")
     public BaseResponse<String> remove(@RequestParam String id) {
         try {
-            goodService.update(null, Wrappers.<GoodBean>lambdaUpdate()
-                    .set(GoodBean::getIsDelete, -1)
-                    .eq(GoodBean::getGoodId, id));
+            symbolService.update(null, Wrappers.<SymbolBean>lambdaUpdate()
+                    .set(SymbolBean::getIsDelete, -1)
+                    .eq(SymbolBean::getSymbolId, id));
             return ResponseFactory.success(id);
         } catch (Exception e) {
             log.error("分类页面查询 error：" + e.getMessage(), e);
@@ -136,10 +128,29 @@ public class GoodController {
     @PostMapping("/removeList")
     public BaseResponse<String> remove(@RequestParam List<String> idArray) {
         try {
-            goodService.update(null, Wrappers.<GoodBean>lambdaUpdate()
-                    .set(GoodBean::getIsDelete, -1)
-                    .in(GoodBean::getGoodId, idArray));
+            symbolService.update(null, Wrappers.<SymbolBean>lambdaUpdate()
+                    .set(SymbolBean::getIsDelete, -1)
+                    .in(SymbolBean::getSymbolId, idArray));
             return ResponseFactory.success(String.join(",", idArray));
+        } catch (Exception e) {
+            log.error("分类页面查询 error：" + e.getMessage(), e);
+            return ResponseFactory.fail(null);
+        }
+    }
+
+    @PostMapping("/exchangeSort")
+    public BaseResponse<String> exchangeSort(@RequestParam String sourceId, @RequestParam String destId) {
+        try {
+            SymbolBean source = symbolService.getById(sourceId);
+            SymbolBean dest = symbolService.getById(destId);
+
+            symbolService.update(null, Wrappers.<SymbolBean>lambdaUpdate()
+                    .set(SymbolBean::getSortNum, source.getSortNum())
+                    .eq(SymbolBean::getSymbolId, destId));
+            symbolService.update(null, Wrappers.<SymbolBean>lambdaUpdate()
+                    .set(SymbolBean::getSortNum, dest.getSortNum())
+                    .eq(SymbolBean::getSymbolId, sourceId));
+            return ResponseFactory.success("change");
         } catch (Exception e) {
             log.error("分类页面查询 error：" + e.getMessage(), e);
             return ResponseFactory.fail(null);

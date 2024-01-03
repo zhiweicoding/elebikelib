@@ -13,7 +13,7 @@ import xyz.zhiweicoding.bike.vo.api.IndexVo;
  * @email diaozhiwei2k@gmail.com
  */
 public interface GoodService extends IService<GoodBean> {
-    IndexEntity getIndex(IndexVo param);
+    IndexEntity getIndex();
 
     CatalogEntity getCatalog(CatalogVo param);
 }

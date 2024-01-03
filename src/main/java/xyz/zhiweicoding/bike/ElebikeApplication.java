@@ -1,6 +1,5 @@
 package xyz.zhiweicoding.bike;
 
-import org.dromara.x.file.storage.spring.EnableFileStorage;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -15,7 +14,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableAsync
 @EnableCaching
 @SpringBootApplication
-@EnableFileStorage
 @EnableTransactionManagement
 @MapperScan("xyz.zhiweicoding.bike.dao.mysql")
 @EnableConfigurationProperties

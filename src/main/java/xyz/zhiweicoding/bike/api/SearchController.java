@@ -5,10 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import xyz.zhiweicoding.bike.entity.BaseResponse;
 import xyz.zhiweicoding.bike.entity.api.SearchEntity;
 import xyz.zhiweicoding.bike.entity.api.SearchRedirectEntity;
@@ -20,7 +17,7 @@ import xyz.zhiweicoding.bike.vo.api.SearchVo;
 import java.util.List;
 
 /**
- * 首页
+ * 搜索
  *
  * @Created by zhiwei on 2022/3/11.
  */
@@ -37,15 +34,14 @@ public class SearchController {
      * 查询页查询动作
      * 15 min cache
      *
-     * @param param {@link SearchVo}
+     * @param timestamp {@link String}
      * @return
      */
-    @Cacheable(value = "15m", keyGenerator = "cacheJsonKeyGenerator", condition = "#param != null", unless = "#result == null || #result.getIsEmpty()")
+    @Cacheable(value = "15m", keyGenerator = "cacheJsonKeyGenerator", condition = "#timestamp != null", unless = "#result == null || #result.getIsEmpty()")
     @PostMapping("/query")
-    public BaseResponse<SearchEntity> query(@RequestBody SearchVo param) {
-        log.debug("查询页默认查询,入参 : {}", JSON.toJSONString(param));
+    public BaseResponse<SearchEntity> query(@RequestParam String timestamp) {
         try {
-            SearchEntity search = searchService.getSearch(param);
+            SearchEntity search = searchService.getSearch();
             return ResponseFactory.success(search);
         } catch (Exception e) {
             log.error("查询页默认查询,报错：" + e.getMessage(), e);

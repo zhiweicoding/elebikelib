@@ -52,17 +52,12 @@ mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
-dromara:
-  x-file-storage:
-    default-platform: qiniu-kodo-1
-    qiniu-kodo:
-      - platform: qiniu-kodo-1
-        enable-storage: true
-        access-key:
-        secret-key:
-        bucket-name:
-        domain:
-        base-path:
+cos:
+  secretId:
+  secretKey:
+  region:
+  bucket:
+  baseUrl:
 
 elasticsearch:
   urls:

@@ -49,7 +49,7 @@ public class GoodServiceImpl extends ServiceImpl<GoodDao, GoodBean> implements G
     }
 
     @Override
-    public IndexEntity getIndex(IndexVo param) {
+    public IndexEntity getIndex() {
         IndexEntity resultBean = new IndexEntity();
         List<GoodBean> goodAllList = goodDao.selectList(Wrappers.<GoodBean>lambdaQuery()
                 .eq(GoodBean::getIsDelete, 0));
