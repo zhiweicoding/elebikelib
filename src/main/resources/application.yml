@@ -70,3 +70,8 @@ elasticsearch:
     enable: false
     username:
     password:
+
+management:
+  health:
+    elasticsearch:
+      enabled: false

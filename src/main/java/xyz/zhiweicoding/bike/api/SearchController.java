@@ -40,7 +40,7 @@ public class SearchController {
      * @param param {@link SearchVo}
      * @return
      */
-    @Cacheable(value = "15m", keyGenerator = "cacheJsonKeyGenerator", condition = "#param != null", unless = "#result == null || #result.isEmpty()")
+    @Cacheable(value = "15m", keyGenerator = "cacheJsonKeyGenerator", condition = "#param != null", unless = "#result == null || #result.getIsEmpty()")
     @PostMapping("/query")
     public BaseResponse<SearchEntity> query(@RequestBody SearchVo param) {
         log.debug("查询页默认查询,入参 : {}", JSON.toJSONString(param));
@@ -60,7 +60,7 @@ public class SearchController {
      * @param param {@link SearchVo}
      * @return
      */
-    @Cacheable(value = "15m", keyGenerator = "cacheJsonKeyGenerator", condition = "#param != null", unless = "#result == null || #result.isEmpty()")
+    @Cacheable(value = "15m", keyGenerator = "cacheJsonKeyGenerator", condition = "#param != null", unless = "#result == null || #result.getIsEmpty()")
     @PostMapping("/help")
     public BaseResponse<List<SearchEntity.KeywordBean>> help(@RequestBody SearchVo param) {
         log.debug("查询页，提示信息查询,入参 : {}", JSON.toJSONString(param));

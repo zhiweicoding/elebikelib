@@ -3,6 +3,12 @@ package xyz.zhiweicoding.bike.api;
 import com.alibaba.fastjson2.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.weaver.ast.Var;
+import org.elasticsearch.action.search.SearchRequest;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.client.IndicesClient;
+import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.search.SearchHit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.Cacheable;
@@ -27,6 +33,9 @@ public class CatalogController {
     @Qualifier(value = "goodService")
     private GoodService goodService;
 
+    @Autowired
+    private RestHighLevelClient restHighLevelClient;
+
     /**
      * 获取目录页的信息
      * 15 min cache
@@ -34,12 +43,17 @@ public class CatalogController {
      * @param param {@link CatalogVo}
      * @return
      */
-    @Cacheable(value = "30m", keyGenerator = "cacheJsonKeyGenerator", condition = "#param != null", unless = "#result == null || #result.isEmpty()")
+    @Cacheable(value = "30m", keyGenerator = "cacheJsonKeyGenerator", condition = "#param != null", unless = "#result == null || #result.getIsEmpty()")
     @PostMapping("/query")
     public BaseResponse<CatalogEntity> query(@RequestBody CatalogVo param) {
         log.debug("获取目录页的信息,入参 : {}", JSON.toJSONString(param));
         try {
             log.debug("获取目录页的信息 success");
+            SearchRequest searchRequest = new SearchRequest("query_s0*");
+            SearchResponse search = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
+            for (SearchHit hit : search.getHits().getHits()) {
+                log.info(hit.getSourceAsString());
+            }
             CatalogEntity catalog = goodService.getCatalog(param);
             BaseResponse<CatalogEntity> success = ResponseFactory.success(catalog);
             success.setMsgBodySize(1);

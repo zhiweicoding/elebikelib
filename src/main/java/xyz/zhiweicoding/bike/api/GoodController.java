@@ -36,7 +36,7 @@ public class GoodController {
      * @param param {@link IndexVo}
      * @return
      */
-    @Cacheable(value = "60s", keyGenerator = "cacheJsonKeyGenerator", condition = "#param != null", unless = "#result == null || #result.isEmpty()")
+    @Cacheable(value = "60s", keyGenerator = "cacheJsonKeyGenerator", condition = "#param != null", unless = "#result == null || #result.getIsEmpty()")
     @PostMapping("/detail")
     public
     @ResponseBody

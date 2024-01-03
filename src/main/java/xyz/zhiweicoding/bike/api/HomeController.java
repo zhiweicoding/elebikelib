@@ -36,7 +36,7 @@ public class HomeController {
      * @param param {@link IndexVo}
      * @return {@link BaseResponse}
      */
-    @Cacheable(value = "30m", keyGenerator = "cacheJsonKeyGenerator", condition = "#param != null", unless = "#result == null || #result.isEmpty()")
+    @Cacheable(value = "30m", keyGenerator = "cacheJsonKeyGenerator", condition = "#param != null", unless = "#result == null || #result.getIsEmpty()")
     @PostMapping("/query")
     public BaseResponse<IndexEntity> query(@RequestBody IndexVo param) {
         log.debug("获取首页信息,入参 : {}", JSON.toJSONString(param));

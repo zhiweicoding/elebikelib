@@ -24,7 +24,7 @@ public class ConfigBean implements Serializable {
     @Serial
     @TableField(exist = false)
     private static final long serialVersionUID = 1234567896L;
-    @TableId(type = IdType.ASSIGN_UUID)
+    @TableId(type = IdType.AUTO)
     private int configId;
     private String configContent;
     private String configMsg;

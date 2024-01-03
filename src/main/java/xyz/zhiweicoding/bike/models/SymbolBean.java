@@ -33,5 +33,6 @@ public class SymbolBean implements Serializable {
     private long createTime;
     private long modifyTime;
     private int isDelete;
+    @TableField(exist = false)
     private List<GoodBean> goodBeans;
 }
