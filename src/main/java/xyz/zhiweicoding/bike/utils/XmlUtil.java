@@ -1,6 +1,9 @@
 package xyz.zhiweicoding.bike.utils;
 
-import java.util.Iterator;
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+
 import java.util.Map;
 import java.util.Set;
 
@@ -15,14 +18,10 @@ public class XmlUtil {
         Document document = DocumentHelper.createDocument();
         Element rootEle = document.addElement("xml");
         Set<String> keySets = mapBean.keySet();
-        Iterator var4 = keySets.iterator();
-
-        while(var4.hasNext()) {
-            String keySet = (String)var4.next();
+        for (String keySet : keySets) {
             Element keySetEle = rootEle.addElement(keySet);
             keySetEle.setText(String.valueOf(mapBean.get(keySet)));
         }
-
         return document.asXML();
     }
 

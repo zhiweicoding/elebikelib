@@ -31,13 +31,7 @@ public class MybatisPlusConfig {
         return properties -> {
             GlobalConfig globalConfig = properties.getGlobalConfig();
             globalConfig.setBanner(false);
-
             globalConfig.setDbConfig(new GlobalConfig.DbConfig().setColumnFormat("`%s`"));
-
-            MybatisConfiguration configuration = new MybatisConfiguration();
-            configuration.setDefaultEnumTypeHandler(MybatisEnumTypeHandler.class);
-
-            properties.setConfiguration(configuration);
         };
     }
 
