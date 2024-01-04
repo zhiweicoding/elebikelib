@@ -104,7 +104,7 @@ public class GoodController {
             goodService.save(goodBean);
             return ResponseFactory.success(goodBean.getGoodId());
         } catch (Exception e) {
-            log.error("分类页面查询 error：" + e.getMessage(), e);
+            log.error("save good error：" + e.getMessage(), e);
             return ResponseFactory.fail(null);
         }
     }
@@ -112,10 +112,10 @@ public class GoodController {
     @PostMapping("/update")
     public BaseResponse<String> update(GoodBean goodBean) {
         try {
-            goodService.update(goodBean, Wrappers.<GoodBean>lambdaUpdate().eq(GoodBean::getGoodId, goodBean.getGoodId()));
+            goodService.updateById(goodBean);
             return ResponseFactory.success(goodBean.getGoodId());
         } catch (Exception e) {
-            log.error("分类页面查询 error：" + e.getMessage(), e);
+            log.error("update good error：" + e.getMessage(), e);
             return ResponseFactory.fail(null);
         }
     }
@@ -128,7 +128,7 @@ public class GoodController {
                     .eq(GoodBean::getGoodId, id));
             return ResponseFactory.success(id);
         } catch (Exception e) {
-            log.error("分类页面查询 error：" + e.getMessage(), e);
+            log.error("remove good error：" + e.getMessage(), e);
             return ResponseFactory.fail(null);
         }
     }
@@ -141,7 +141,7 @@ public class GoodController {
                     .in(GoodBean::getGoodId, idArray));
             return ResponseFactory.success(String.join(",", idArray));
         } catch (Exception e) {
-            log.error("分类页面查询 error：" + e.getMessage(), e);
+            log.error("remove good batch error：" + e.getMessage(), e);
             return ResponseFactory.fail(null);
         }
     }

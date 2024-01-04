@@ -104,7 +104,7 @@ public class SymbolPageController {
     @PostMapping("/update")
     public BaseResponse<String> update(SymbolBean symbolBean) {
         try {
-            symbolService.update(symbolBean, Wrappers.<SymbolBean>lambdaUpdate().eq(SymbolBean::getSymbolId, symbolBean.getSymbolId()));
+            symbolService.updateById(symbolBean);
             return ResponseFactory.success(symbolBean.getSymbolId());
         } catch (Exception e) {
             log.error("分类页面查询 error：" + e.getMessage(), e);

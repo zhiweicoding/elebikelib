@@ -22,103 +22,26 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @TableName(value = "t_store")
 public class StoreBean implements Serializable {
-    /**
-     *
-     */
-    @TableId(value = "store_id", type = IdType.ASSIGN_UUID)
-    private String store_id;
-
-    /**
-     *
-     */
-    @TableField(value = "store_name")
-    private String store_name;
-
-    /**
-     * 详细信息
-     */
-    @TableField(value = "store_desc")
-    private String store_desc;
-
-    /**
-     *
-     */
-    @TableField(value = "store_logo")
-    private String store_logo;
-
-    /**
-     * 电话
-     */
-    @TableField(value = "phone_num")
-    private String phone_num;
-
-    /**
-     * 备用电话
-     */
-    @TableField(value = "backup_phone_num")
-    private String backup_phone_num;
-
-    /**
-     * 企业微信链接
-     */
-    @TableField(value = "staff_wx")
-    private String staff_wx;
-
-    /**
-     * 省份
-     */
-    @TableField(value = "province")
-    private String province;
-
-    /**
-     *
-     */
-    @TableField(value = "city")
-    private String city;
-
-    /**
-     * 区县
-     */
-    @TableField(value = "area")
-    private String area;
-
-    /**
-     *
-     */
-    @TableField(value = "longitude")
-    private double longitude;
-
-    /**
-     *
-     */
-    @TableField(value = "latitude")
-    private double latitude;
-
-    /**
-     * 营业执照等的链接
-     */
-    @TableField(value = "license_url")
-    private String license_url;
-
-    /**
-     *
-     */
-    @TableField(value = "is_delete")
-    private int is_delete;
-
-    /**
-     *
-     */
-    @TableField(value = "create_time")
-    private long create_time;
-
-    /**
-     *
-     */
-    @TableField(value = "modify_time")
-    private long modify_time;
-
     @TableField(exist = false)
     @Serial
     private static final long serialVersionUID = 1L;
+    @TableId(type = IdType.ASSIGN_UUID)
+    private String storeId;
+    private String storeName;
+    private String storeDesc;
+    private String storeLogo;
+    private String phoneNum;
+    private String backupPhoneNum;
+    private String staffWx;
+    private String province;
+    private String city;
+    private String area;
+    private String address;
+    private double longitude;
+    private double latitude;
+    private String licenseUrl;
+    private int isDelete;
+    private long createTime;
+    private long modifyTime;
+
 }
