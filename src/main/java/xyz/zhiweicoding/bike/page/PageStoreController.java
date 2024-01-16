@@ -1,17 +1,14 @@
-package xyz.zhiweicoding.bike.api;
+package xyz.zhiweicoding.bike.page;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import xyz.zhiweicoding.bike.entity.BaseResponse;
-import xyz.zhiweicoding.bike.models.StoreBean;
 import xyz.zhiweicoding.bike.models.StoreBean;
 import xyz.zhiweicoding.bike.services.StoreService;
 import xyz.zhiweicoding.bike.support.ResponseFactory;
@@ -25,9 +22,9 @@ import java.util.List;
  * @Created by zhiwei on 2022/3/11.
  */
 @RestController
-@RequestMapping(value = "/v1/api/store")
+@RequestMapping(value = "/v1/page/store")
 @Slf4j
-public class StoreController {
+public class PageStoreController {
 
     @Autowired
     @Qualifier(value = "storeService")
@@ -37,7 +34,7 @@ public class StoreController {
      * 门店查询
      */
     @PostMapping("/index")
-    public BaseResponse<Page<StoreBean>> index(@RequestParam String anyText, @RequestParam long startTime, @RequestParam long endTime, @RequestParam int current, @RequestParam int size) {
+    public BaseResponse<Page<StoreBean>> index(HttpServletRequest request, @RequestParam String anyText, @RequestParam long startTime, @RequestParam long endTime, @RequestParam int current, @RequestParam int size) {
         try {
             Page<StoreBean> page = new Page<>(current, size);
             LambdaQueryWrapper<StoreBean> wrapper = Wrappers.<StoreBean>lambdaQuery().eq(StoreBean::getIsDelete, 0);
@@ -73,7 +70,7 @@ public class StoreController {
     }
 
     @PostMapping("/save")
-    public BaseResponse<String> save(StoreBean storeBean) {
+    public BaseResponse<String> save(HttpServletRequest request, @RequestBody StoreBean storeBean) {
         try {
             storeBean.setStoreId(GeneratorUtil.getCommonId());
             storeService.save(storeBean);
@@ -85,7 +82,7 @@ public class StoreController {
     }
 
     @PostMapping("/update")
-    public BaseResponse<String> update(StoreBean storeBean) {
+    public BaseResponse<String> update(HttpServletRequest request,@RequestBody StoreBean storeBean) {
         try {
             storeService.updateById(storeBean);
             return ResponseFactory.success(storeBean.getStoreId());
@@ -96,7 +93,7 @@ public class StoreController {
     }
 
     @PostMapping("/remove")
-    public BaseResponse<String> remove(@RequestParam String id) {
+    public BaseResponse<String> remove(HttpServletRequest request, @RequestParam String id) {
         try {
             storeService.update(null, Wrappers.<StoreBean>lambdaUpdate()
                     .set(StoreBean::getIsDelete, -1)
@@ -109,7 +106,7 @@ public class StoreController {
     }
 
     @PostMapping("/removeList")
-    public BaseResponse<String> remove(@RequestParam List<String> idArray) {
+    public BaseResponse<String> removeList(HttpServletRequest request, @RequestBody List<String> idArray) {
         try {
             storeService.update(null, Wrappers.<StoreBean>lambdaUpdate()
                     .set(StoreBean::getIsDelete, -1)

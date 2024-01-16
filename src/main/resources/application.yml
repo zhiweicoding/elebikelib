@@ -16,6 +16,10 @@ spring:
     proxy-target-class: true
   application:
     name: booklib
+  servlet:
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 500MB
   datasource:
     url:
     driver-class-name: com.mysql.cj.jdbc.Driver

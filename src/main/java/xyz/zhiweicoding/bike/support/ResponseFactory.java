@@ -24,6 +24,14 @@ public class ResponseFactory {
         return response;
     }
 
+    public static <T> BaseResponse<T> noToken(T t) {
+        BaseResponse<T> response = new BaseResponse<>();
+        response.setMsgCode(StatsEnum.NO_TOKEN.code);
+        response.setMsgBody(t);
+        response.setMsgInfo(StatsEnum.NO_TOKEN.name);
+        return response;
+    }
+
     public static <T> BaseResponse<T> get(StatsEnum statsEnum, T t) {
         BaseResponse<T> response = new BaseResponse<>();
         response.setMsgCode(statsEnum.code);

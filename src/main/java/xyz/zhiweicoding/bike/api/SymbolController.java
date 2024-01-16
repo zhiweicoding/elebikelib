@@ -1,41 +1,36 @@
 package xyz.zhiweicoding.bike.api;
 
 import com.alibaba.fastjson2.JSON;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import xyz.zhiweicoding.bike.entity.api.IndexEntity;
-import xyz.zhiweicoding.bike.entity.BaseResponse;
-import xyz.zhiweicoding.bike.models.GoodBean;
-import xyz.zhiweicoding.bike.models.SymbolBean;
-import xyz.zhiweicoding.bike.services.GoodService;
-import xyz.zhiweicoding.bike.support.ResponseFactory;
-import xyz.zhiweicoding.bike.utils.GeneratorUtil;
-import xyz.zhiweicoding.bike.vo.api.IndexVo;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
+import xyz.zhiweicoding.bike.entity.BaseResponse;
+import xyz.zhiweicoding.bike.models.GoodBean;
+import xyz.zhiweicoding.bike.services.GoodService;
+import xyz.zhiweicoding.bike.services.SymbolService;
+import xyz.zhiweicoding.bike.support.ResponseFactory;
+import xyz.zhiweicoding.bike.vo.api.IndexVo;
 
 /**
- * 商品页
+ * 电动车分类接口
  *
  * @Created by zhiwei on 2024/1/1.
  */
 @RestController
-@RequestMapping(value = "/v1/api/good")
+@RequestMapping(value = "/v1/api/symbol")
 @Slf4j
-public class GoodController {
+public class SymbolController {
 
     @Autowired
     @Qualifier(value = "goodService")
     private GoodService goodService;
+
+    @Autowired
+    @Qualifier(value = "symbolService")
+    private SymbolService symbolService;
 
     /**
      * 获取商品的详细信息
