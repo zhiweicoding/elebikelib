@@ -56,7 +56,7 @@ public class GoodServiceImpl extends ServiceImpl<GoodDao, GoodBean> implements G
         List<SymbolBean> symbolAllLists = symbolDao.selectList(Wrappers.<SymbolBean>lambdaQuery()
                 .eq(SymbolBean::getIsDelete, 0));
         List<GoodBean> filterBeans = goodAllList.stream()
-                .filter(bean -> bean.getIsChosen() == 1 && bean.getIsNew() == 0 && bean.getIsCheap() == 0)
+                .filter(bean -> bean.getIsChosen() == 1 && bean.getIsNew() == 0)
                 .collect(Collectors.toList());
         resultBean.setTopics(filterBeans);
 
@@ -108,8 +108,7 @@ public class GoodServiceImpl extends ServiceImpl<GoodDao, GoodBean> implements G
         LambdaQueryWrapper<GoodBean> wrapper = Wrappers.<GoodBean>lambdaQuery()
                 .eq(GoodBean::getIsDelete, 0)
                 .orderByDesc(GoodBean::getIsChosen)
-                .orderByDesc(GoodBean::getIsNew)
-                .orderByDesc(GoodBean::getIsCheap);
+                .orderByDesc(GoodBean::getIsNew);
         String order = param.getOrder();
         String sort = param.getSort();
         String categoryId = param.getCategoryId();

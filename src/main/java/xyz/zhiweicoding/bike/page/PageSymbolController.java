@@ -56,7 +56,7 @@ public class PageSymbolController {
                     new Page<>(current, pageSize),
                     wrapper
             );
-            AntArrayEntity<SymbolBean> result = new AntArrayEntity<>((int) resultPage.getCurrent(), resultPage.getRecords(), pageSize);
+            AntArrayEntity<SymbolBean> result = new AntArrayEntity<>((int) resultPage.getCurrent(), resultPage.getRecords(), pageSize, (int) resultPage.getTotal());
             return ResponseFactory.success(result);
         } catch (Exception e) {
             log.error("分类页面查询 error：" + e.getMessage(), e);

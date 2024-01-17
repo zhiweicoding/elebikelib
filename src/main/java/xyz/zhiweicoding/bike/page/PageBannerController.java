@@ -55,7 +55,7 @@ public class PageBannerController {
             String configContent = one.getConfigContent();
             List<Map<String, String>> banners = JSON.parseObject(configContent, new TypeReference<>() {
             });
-            AntArrayEntity<Map<String, String>> result = new AntArrayEntity<>(current, banners, pageSize);
+            AntArrayEntity<Map<String, String>> result = new AntArrayEntity<>(current, banners, pageSize, banners.size());
             return ResponseFactory.success(result);
         } catch (Exception e) {
             log.error("首页banner查询 error：" + e.getMessage(), e);

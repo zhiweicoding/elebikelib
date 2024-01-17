@@ -29,11 +29,11 @@ public class AntArrayEntity<T> implements Serializable {
      * @param data     数据
      * @param pageSize 每页大小
      */
-    public AntArrayEntity(int current, List<T> data, int pageSize) {
+    public AntArrayEntity(int current, List<T> data, int pageSize, int total) {
         this.current = current;
         this.success = true;
         this.data = data;
-        this.total = data.size();
+        this.total = total;
         this.pageSize = pageSize;
     }
 

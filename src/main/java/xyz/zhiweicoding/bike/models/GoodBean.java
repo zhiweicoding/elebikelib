@@ -1,5 +1,6 @@
 package xyz.zhiweicoding.bike.models;
 
+import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -10,6 +11,8 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author zhiweicoding.xyz
@@ -30,27 +33,29 @@ public class GoodBean implements Serializable {
     private String goodBrief;
     private String scenePicUrl;
     private String listPicUrl;
-    private double floorPrice;
     private double retailPrice;
-    private double marketPrice;
     private int goodNumber;
-    private String videoUrlVertical;
-    private String videoUrlHorizontal;
-    private String photoUrl1;
-    private String photoUrl2;
-    private String photoUrl3;
-    private String photoUrl4;
-    private String photoUrl5;
-    private String tagList;
+    private String photoUrl;
+    @TableField(exist = false)
+    private List<String> photoUrlArray;
+    @TableField(exist = false)
+    private String symbolName;
     private String symbolId;
     @TableField(value = "is_new")
     private int isNew;
     @TableField(value = "is_chosen")
     private int isChosen;
-    @TableField(value = "is_cheap")
-    private int isCheap;
     private int likeNum;
     private long createTime;
     private long modifyTime;
     private int isDelete;
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
+        if (photoUrl != null && !photoUrl.isEmpty()) {
+            this.photoUrlArray = JSON.parseArray(photoUrl, String.class);
+        } else {
+            this.photoUrlArray = new ArrayList<>();
+        }
+    }
 }
