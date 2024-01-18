@@ -33,12 +33,8 @@ public class StoreBean implements Serializable {
     private String phoneNum;
     private String backupPhoneNum;
     private String staffWx;
-    private String province;
-    private String city;
-    private String area;
     private String address;
-    private double longitude;
-    private double latitude;
+    private String lnglat;
     private String licenseUrl;
     private int isDelete;
     private long createTime;
