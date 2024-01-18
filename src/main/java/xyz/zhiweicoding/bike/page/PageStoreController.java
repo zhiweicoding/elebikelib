@@ -70,6 +70,7 @@ public class PageStoreController {
             StoreBean store = new StoreBean();
             store.setStoreId(GeneratorUtil.getCommonId());
             store.setLicenseUrl(getUrl(storeBean, "licenseUrl"));
+            store.setStoreLogo(getUrl(storeBean, "storeLogo"));
             store.setStoreName(String.valueOf(storeBean.get("storeName")));
             store.setStoreDesc(String.valueOf(storeBean.get("storeDesc")));
             store.setPhoneNum(String.valueOf(storeBean.get("phoneNum")));
