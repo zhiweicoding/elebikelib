@@ -216,10 +216,10 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <!--                    <username>loveqiqnqian</username>-->
-                    <!--                    <password>csdiao210</password>-->
+                    <username>loveqiqnqian</username>
+                    <password>csdiao210</password>
                     <tag>${project.version}</tag>
-                    <repository>zhiweicoding/${project.artifactId}</repository>
+                    <repository>loveqianqian/${project.artifactId}</repository>
                     <buildArgs>
                         <!--                        <finalName>${project.artifactId}-${project.version}</finalName>-->
                         <JAR_FILE>${project.build.finalName}.jar</JAR_FILE>
