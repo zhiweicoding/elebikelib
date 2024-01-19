@@ -44,13 +44,19 @@ public class PageSymbolController {
      * @return
      */
     @PostMapping("/index")
-    public BaseResponse<AntArrayEntity<SymbolBean>> index(HttpServletRequest request, String symbolName, int current, int pageSize) {
+    public BaseResponse<AntArrayEntity<SymbolBean>> index(HttpServletRequest request, String symbolName, String place, String isPopular, int current, int pageSize) {
         try {
             LambdaQueryWrapper<SymbolBean> wrapper = Wrappers.<SymbolBean>lambdaQuery()
                     .eq(SymbolBean::getIsDelete, 0)
                     .orderByAsc(SymbolBean::getSortNum);
             if (symbolName != null && !symbolName.isEmpty()) {
                 wrapper.like(SymbolBean::getSymbolName, symbolName);
+            }
+            if (place != null && !place.isEmpty()) {
+                wrapper.like(SymbolBean::getPlace, place);
+            }
+            if (isPopular != null && !isPopular.isEmpty()) {
+                wrapper.like(SymbolBean::getIsPopular, isPopular);
             }
             Page<SymbolBean> resultPage = symbolService.page(
                     new Page<>(current, pageSize),

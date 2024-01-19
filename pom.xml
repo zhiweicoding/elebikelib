@@ -216,8 +216,8 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <username>loveqiqnqian</username>
-                    <password>csdiao210</password>
+<!--                    <username>loveqiqnqian</username>-->
+<!--                    <password>csdiao210</password>-->
                     <tag>${project.version}</tag>
                     <repository>loveqianqian/${project.artifactId}</repository>
                     <buildArgs>

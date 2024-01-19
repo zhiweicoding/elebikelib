@@ -30,6 +30,7 @@ public class SymbolBean implements Serializable {
     private String symbolName;
     private int sortNum;
     private int isPopular;
+    private int place;
     private long createTime;
     private long modifyTime;
     private int isDelete;
