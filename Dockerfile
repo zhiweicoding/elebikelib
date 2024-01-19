@@ -1,4 +1,4 @@
-FROM openjdk:11-jre
+FROM openjdk:17.0.2-jdk
 
 WORKDIR /app
 ARG JAR_FILE
