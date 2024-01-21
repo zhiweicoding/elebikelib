@@ -18,7 +18,7 @@ import java.io.Serializable;
 public class SearchRedirectEntity implements Serializable {
 
     @Serial
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 6587417864727358582L;
 
     private String pageUrl;
     private String keywordId;

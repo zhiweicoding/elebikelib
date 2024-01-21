@@ -22,10 +22,7 @@ import xyz.zhiweicoding.bike.services.GoodService;
 import xyz.zhiweicoding.bike.vo.api.CatalogVo;
 import xyz.zhiweicoding.bike.vo.api.IndexVo;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -55,6 +52,10 @@ public class GoodServiceImpl extends ServiceImpl<GoodDao, GoodBean> implements G
                 .eq(GoodBean::getIsDelete, 0));
         List<SymbolBean> symbolAllLists = symbolDao.selectList(Wrappers.<SymbolBean>lambdaQuery()
                 .eq(SymbolBean::getIsDelete, 0));
+        List<String> popularKeyArray = symbolAllLists.stream().filter(b -> b.getIsPopular() == 1).sorted(Comparator.comparingInt(SymbolBean::getSortNum)).map(SymbolBean::getSymbolId).toList();
+        List<GoodBean> popularGoodArray = goodAllList.stream().filter(b -> popularKeyArray.contains(b.getSymbolId())).limit(20).collect(Collectors.toList());
+        resultBean.setTopics(!popularGoodArray.isEmpty() ? popularGoodArray : new ArrayList<>());
+
         List<GoodBean> filterBeans = goodAllList.stream()
                 .filter(bean -> bean.getIsChosen() == 1 && bean.getIsNew() == 0)
                 .collect(Collectors.toList());

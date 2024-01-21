@@ -22,10 +22,10 @@ import java.util.List;
 public class IndexEntity implements Serializable {
     private List<GoodBean> hotGoods = new ArrayList<>();
     private List<GoodBean> newGoods = new ArrayList<>();
-    private List<GoodBean> brands=new ArrayList<>();
-    private List<FloorGood> floorGoods;
-    private List<GoodBean> topics;
-    private List<Banner> banners;
+    private List<GoodBean> brands = new ArrayList<>();
+    private List<FloorGood> floorGoods = new ArrayList<>();
+    private List<GoodBean> topics = new ArrayList<>();
+    private List<Banner> banners = new ArrayList<>();
 
     @Data
     @AllArgsConstructor
