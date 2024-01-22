@@ -33,7 +33,7 @@ public class HomeController {
      * @param timestamp {@link String}
      * @return {@link BaseResponse}
      */
-    @Cacheable(value = "30m", keyGenerator = "cacheJsonKeyGenerator", condition = "#timestamp != null", unless = "#result == null || #result.getIsEmpty()")
+//    @Cacheable(value = "30m", keyGenerator = "cacheJsonKeyGenerator", condition = "#timestamp != null", unless = "#result == null || #result.getIsEmpty()")
     @PostMapping("/query")
     public BaseResponse<IndexEntity> query(@RequestParam String timestamp) {
         try {

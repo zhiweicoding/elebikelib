@@ -56,11 +56,6 @@ public class GoodServiceImpl extends ServiceImpl<GoodDao, GoodBean> implements G
         List<GoodBean> popularGoodArray = goodAllList.stream().filter(b -> popularKeyArray.contains(b.getSymbolId())).limit(20).collect(Collectors.toList());
         resultBean.setTopics(!popularGoodArray.isEmpty() ? popularGoodArray : new ArrayList<>());
 
-        List<GoodBean> filterBeans = goodAllList.stream()
-                .filter(bean -> bean.getIsChosen() == 1 && bean.getIsNew() == 0)
-                .collect(Collectors.toList());
-        resultBean.setTopics(filterBeans);
-
         List<IndexEntity.FloorGood> floorGoods = new ArrayList<>();
         for (SymbolBean symbol : symbolAllLists) {
             String symbolId = symbol.getSymbolId();
@@ -110,9 +105,10 @@ public class GoodServiceImpl extends ServiceImpl<GoodDao, GoodBean> implements G
                 .eq(GoodBean::getIsDelete, 0)
                 .orderByDesc(GoodBean::getIsChosen)
                 .orderByDesc(GoodBean::getIsNew);
-        String order = param.getOrder();
-        String sort = param.getSort();
-        String categoryId = param.getCategoryId();
+        String order = param.getOrder();// order by price
+        String sort = param.getSort(); //新品
+        String categoryId = param.getCategoryId();//symbol id
+        String place = param.getPlace();//基地
         FlagEnum ascDesc = FlagEnum.getByName(order);
         if (Objects.requireNonNull(ascDesc) == FlagEnum.DESC) {
             wrapper.orderByDesc(GoodBean::getRetailPrice);
@@ -125,7 +121,12 @@ public class GoodServiceImpl extends ServiceImpl<GoodDao, GoodBean> implements G
             wrapper.eq(GoodBean::getIsNew, 1);
         }
 
-        List<SymbolBean> symbolAllList = symbolDao.selectList(Wrappers.<SymbolBean>lambdaQuery().eq(SymbolBean::getIsDelete, 0));
+        LambdaQueryWrapper<SymbolBean> symbolWrapper = Wrappers.<SymbolBean>lambdaQuery()
+                .eq(SymbolBean::getIsDelete, 0);
+        if (place != null && !place.isEmpty() && !place.equals("-1")) {
+            symbolWrapper.eq(SymbolBean::getPlace, place);
+        }
+        List<SymbolBean> symbolAllList = symbolDao.selectList(symbolWrapper);
         if (symbolAllList.isEmpty()) {
             log.warn("无分类，数据有误");
             return sendBean;
