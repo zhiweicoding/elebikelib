@@ -36,4 +36,6 @@ public class SymbolBean implements Serializable {
     private int isDelete;
     @TableField(exist = false)
     private List<GoodBean> goodBeans;
+    @TableField(exist = false)
+    private boolean checked;
 }

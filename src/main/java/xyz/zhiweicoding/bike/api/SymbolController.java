@@ -1,18 +1,20 @@
 package xyz.zhiweicoding.bike.api;
 
-import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import xyz.zhiweicoding.bike.entity.BaseResponse;
-import xyz.zhiweicoding.bike.models.GoodBean;
-import xyz.zhiweicoding.bike.services.GoodService;
+import xyz.zhiweicoding.bike.models.SymbolBean;
 import xyz.zhiweicoding.bike.services.SymbolService;
 import xyz.zhiweicoding.bike.support.ResponseFactory;
-import xyz.zhiweicoding.bike.vo.api.IndexVo;
+
+import java.util.List;
 
 /**
  * 电动车分类接口
@@ -25,32 +27,32 @@ import xyz.zhiweicoding.bike.vo.api.IndexVo;
 public class SymbolController {
 
     @Autowired
-    @Qualifier(value = "goodService")
-    private GoodService goodService;
-
-    @Autowired
     @Qualifier(value = "symbolService")
     private SymbolService symbolService;
 
     /**
-     * 获取商品的详细信息
-     * 15 min cache
-     *
-     * @param param {@link IndexVo}
-     * @return
+     * 获取分类list
+     * 60s
      */
-    @Cacheable(value = "60s", keyGenerator = "cacheJsonKeyGenerator", condition = "#param != null", unless = "#result == null || #result.getIsEmpty()")
-    @PostMapping("/detail")
+    @Cacheable(value = "3m", keyGenerator = "cacheJsonKeyGenerator", condition = "#isCatalog != null", unless = "#result == null || #result.getIsEmpty()")
+    @PostMapping("/list")
     public
     @ResponseBody
-    BaseResponse<GoodBean> detail(@RequestBody IndexVo param) {
-        log.debug("获取商品的详细信息,入参 : {}", JSON.toJSONString(param));
+    BaseResponse<List<SymbolBean>> list(boolean isCatalog) {
         try {
-            GoodBean detail = goodService.getOne(Wrappers.<GoodBean>lambdaQuery().eq(GoodBean::getGoodId, param.getGoodId()));
-            log.debug("获取商品的详细信息 success");
-            return ResponseFactory.success(detail);
+
+            List<SymbolBean> list = symbolService.list(Wrappers.<SymbolBean>lambdaQuery().select(SymbolBean::getSymbolId,SymbolBean::getPlace,
+                    SymbolBean::getSymbolName));
+            if (isCatalog) {
+                SymbolBean all = new SymbolBean();
+                all.setChecked(false);
+                all.setSymbolId("-1");
+                all.setSymbolName("全部");
+            }
+            log.debug("获取分类的详细信息 success");
+            return ResponseFactory.success(list);
         } catch (Exception e) {
-            log.error("获取商品的详细信息 error：" + e.getMessage(), e);
+            log.error("获取分类的详细信息 error：" + e.getMessage(), e);
             return ResponseFactory.fail(null);
         }
     }

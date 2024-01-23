@@ -13,8 +13,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CatalogVo {
-    private String sort;
-    private String order;
-    private String categoryId;
-    private String place;
+    private int isPopular = -1;//爆款
+    private int isNew = -1;//新款
+    private int isChosen = -1;//推荐
+    private String order = "asc";//asc,desc
+    private String symbolId = "-1";
+    private int place = -1;//1:天津,0:无锡
 }

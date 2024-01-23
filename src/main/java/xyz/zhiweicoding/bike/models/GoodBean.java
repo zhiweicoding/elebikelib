@@ -49,6 +49,8 @@ public class GoodBean implements Serializable {
     private long createTime;
     private long modifyTime;
     private int isDelete;
+    @TableField(exist = false)
+    private int weight;
 
     public void setPhotoUrl(String photoUrl) {
         this.photoUrl = photoUrl;

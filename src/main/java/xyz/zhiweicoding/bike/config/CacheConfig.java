@@ -44,6 +44,7 @@ public class CacheConfig {
         RedisCacheConfiguration h1 = RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofHours(1)).serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(stringRedisSerializer)).serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jsonSerializer())).disableCachingNullValues().prefixCacheNameWith("srw_");
         RedisCacheConfiguration m30 = RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(30)).serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(stringRedisSerializer)).serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jsonSerializer())).disableCachingNullValues().prefixCacheNameWith("srw_");
         RedisCacheConfiguration m15 = RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(15)).serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(stringRedisSerializer)).serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jsonSerializer())).disableCachingNullValues().prefixCacheNameWith("srw_");
+        RedisCacheConfiguration m3 = RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(3)).serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(stringRedisSerializer)).serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jsonSerializer())).disableCachingNullValues().prefixCacheNameWith("srw_");
         RedisCacheConfiguration d30 = RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofDays(30)).serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(stringRedisSerializer)).serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jsonSerializer())).disableCachingNullValues().prefixCacheNameWith("srw_");
         RedisCacheConfiguration h24 = RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofHours(24)).serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(stringRedisSerializer)).serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jsonSerializer())).disableCachingNullValues().prefixCacheNameWith("srw_");
         RedisCacheConfiguration s60 = RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofSeconds(60)).serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(stringRedisSerializer)).serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jsonSerializer())).disableCachingNullValues().prefixCacheNameWith("srw_");
@@ -55,6 +56,7 @@ public class CacheConfig {
             {
                 put("60s", s60);
                 put("30s", s30);
+                put("3m", m3);
                 put("15m", m15);
                 put("30m", m30);
                 put("24h", h24);
