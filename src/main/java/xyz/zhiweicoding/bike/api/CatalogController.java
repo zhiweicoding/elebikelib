@@ -43,7 +43,7 @@ public class CatalogController {
      * @param param {@link CatalogVo}
      * @return
      */
-    @Cacheable(value = "30m", keyGenerator = "cacheJsonKeyGenerator", condition = "#param != null", unless = "#result == null || #result.getIsEmpty()")
+//    @Cacheable(value = "3m", keyGenerator = "cacheJsonKeyGenerator", condition = "#param != null", unless = "#result == null || #result.getIsEmpty()")
     @PostMapping("/query")
     public BaseResponse<CatalogEntity> query(@RequestBody CatalogVo param) {
         log.debug("获取目录页的信息,入参 : {}", JSON.toJSONString(param));

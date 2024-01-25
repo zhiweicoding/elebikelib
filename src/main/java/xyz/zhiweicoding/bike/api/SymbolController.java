@@ -41,13 +41,14 @@ public class SymbolController {
     BaseResponse<List<SymbolBean>> list(boolean isCatalog) {
         try {
 
-            List<SymbolBean> list = symbolService.list(Wrappers.<SymbolBean>lambdaQuery().select(SymbolBean::getSymbolId,SymbolBean::getPlace,
+            List<SymbolBean> list = symbolService.list(Wrappers.<SymbolBean>lambdaQuery().select(SymbolBean::getSymbolId, SymbolBean::getPlace,
                     SymbolBean::getSymbolName));
             if (isCatalog) {
                 SymbolBean all = new SymbolBean();
-                all.setChecked(false);
+                all.setChecked(true);
                 all.setSymbolId("-1");
                 all.setSymbolName("全部");
+                list.add(0, all);
             }
             log.debug("获取分类的详细信息 success");
             return ResponseFactory.success(list);
