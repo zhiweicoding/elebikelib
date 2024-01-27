@@ -50,7 +50,7 @@ public class SearchServiceImpl implements SearchService {
         }
         List<SearchEntity.KeywordBean> hotKeywords = symbolAllList.stream().map(b -> {
             SearchEntity.KeywordBean keywordBean = new SearchEntity.KeywordBean();
-            keywordBean.setIs_hot(b.getIsPopular());
+            keywordBean.setIsHot(b.getIsPopular());
             keywordBean.setKeyword(b.getSymbolName());
             keywordBean.setKeywordId(b.getSymbolId());
             return keywordBean;
@@ -70,7 +70,7 @@ public class SearchServiceImpl implements SearchService {
                     .eq(SymbolBean::getIsDelete, 0));
             return symbolBeans.stream().map(b -> {
                 SearchEntity.KeywordBean keywordBean = new SearchEntity.KeywordBean();
-                keywordBean.setIs_hot(b.getIsPopular());
+                keywordBean.setIsHot(b.getIsPopular());
                 keywordBean.setKeyword(b.getSymbolName());
                 keywordBean.setKeywordId(b.getSymbolId());
                 return keywordBean;

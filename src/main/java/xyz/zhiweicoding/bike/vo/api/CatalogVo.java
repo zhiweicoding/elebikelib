@@ -19,4 +19,5 @@ public class CatalogVo {
     private String order = "asc";//asc,desc
     private String symbolId = "-1";
     private int place = -1;//1:天津,0:无锡
+    private String searchValue;
 }

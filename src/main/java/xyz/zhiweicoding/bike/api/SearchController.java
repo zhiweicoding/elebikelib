@@ -24,6 +24,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/v1/api/search")
 @Slf4j
+@Deprecated
 public class SearchController {
 
     @Autowired

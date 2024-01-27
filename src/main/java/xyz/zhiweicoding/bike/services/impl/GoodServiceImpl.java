@@ -137,6 +137,14 @@ public class GoodServiceImpl extends ServiceImpl<GoodDao, GoodBean> implements G
         } else {
             sendBean.setSymbolName("全部");
         }
+        if (param.getSearchValue() != null && !param.getSearchValue().isEmpty()) {
+            wrapper.and(andWrapper -> {
+                andWrapper
+                        .like(GoodBean::getGoodTitle, param.getSearchValue())
+                        .or()
+                        .like(GoodBean::getGoodBrief, param.getSearchValue());
+            });
+        }
         List<SymbolBean> symbolAllList = symbolDao.selectList(symbolWrapper);
         if (symbolAllList.isEmpty()) {
             log.warn("无分类，数据有误");

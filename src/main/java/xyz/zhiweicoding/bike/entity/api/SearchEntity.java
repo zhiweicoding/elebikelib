@@ -43,7 +43,7 @@ public class SearchEntity implements Serializable {
         @Serial
         private static final long serialVersionUID = -766104949242494277L;
 
-        private int is_hot;
+        private int isHot;
         private String keyword;
         private String keywordId;
 
