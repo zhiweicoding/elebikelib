@@ -77,6 +77,12 @@ public class PageGoodController {
         }
     }
 
+    /**
+     * good page save
+     * @param request
+     * @param goodBean
+     * @return
+     */
     @PostMapping("/save")
     public BaseResponse<String> save(HttpServletRequest request, @RequestBody Map<String, Object> goodBean) {
         try {
@@ -120,6 +126,12 @@ public class PageGoodController {
         return url;
     }
 
+    /**
+     * good page update
+     * @param request
+     * @param goodBean
+     * @return
+     */
     @PutMapping("/update")
     public BaseResponse<String> update(HttpServletRequest request, @RequestBody GoodBean goodBean) {
         try {
@@ -131,6 +143,12 @@ public class PageGoodController {
         }
     }
 
+    /**
+     * good page delete
+     * @param request
+     * @param idArray
+     * @return
+     */
     @DeleteMapping("/removeList")
     public BaseResponse<String> removeList(HttpServletRequest request, @RequestBody List<String> idArray) {
         try {

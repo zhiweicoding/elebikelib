@@ -1,29 +1,19 @@
 package xyz.zhiweicoding.bike.api;
 
-import com.alibaba.fastjson2.JSON;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.qcloud.cos.model.PutObjectResult;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import xyz.zhiweicoding.bike.entity.BaseResponse;
-import xyz.zhiweicoding.bike.models.GoodBean;
-import xyz.zhiweicoding.bike.services.GoodService;
-import xyz.zhiweicoding.bike.services.SymbolService;
-import xyz.zhiweicoding.bike.support.ResponseFactory;
 import xyz.zhiweicoding.bike.utils.CosUtil;
 import xyz.zhiweicoding.bike.utils.GeneratorUtil;
-import xyz.zhiweicoding.bike.vo.api.IndexVo;
-
-import java.util.UUID;
 
 /**
- * 电动车分类接口
+ * 上传资源
  *
  * @Created by zhiwei on 2024/1/1.
  */

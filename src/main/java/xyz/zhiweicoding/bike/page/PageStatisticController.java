@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * page login query
+ * 分析页面数据来源
  *
  * @Created by zhiwei on 2022/3/11.
  */
@@ -49,7 +49,7 @@ public class PageStatisticController {
 
 
     /**
-     * common query
+     * statistic common query
      */
     @PostMapping("/common")
     public BaseResponse<Map<String, Long>> common(HttpServletRequest request) {
@@ -66,7 +66,7 @@ public class PageStatisticController {
     }
 
     /**
-     * division good group by symbol
+     * statistic page division good group by symbol
      */
     @PostMapping("/symbolGood")
     public BaseResponse<List<StatisticSymbolGoodEntity>> symbolGood(HttpServletRequest request) {

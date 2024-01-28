@@ -38,7 +38,7 @@ public class PageLoginController {
     private RedisSupport redisSupport;
 
     /**
-     * in
+     * login in
      */
     @PostMapping("/in")
     public BaseResponse<String> in(@RequestBody Map<String, String> param) {
@@ -76,7 +76,7 @@ public class PageLoginController {
     }
 
     /**
-     * out
+     * login out
      */
     @PostMapping("/out")
     public BaseResponse<String> out(@RequestHeader("Authorization") String authorization) {

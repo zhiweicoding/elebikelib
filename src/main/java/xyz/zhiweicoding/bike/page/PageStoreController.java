@@ -34,7 +34,7 @@ public class PageStoreController {
     private StoreService storeService;
 
     /**
-     * 门店查询
+     * page 门店查询 search
      */
     @PostMapping("/index")
     public BaseResponse<AntArrayEntity<StoreBean>> index(HttpServletRequest request, String storeName, String phoneNum,
@@ -64,6 +64,12 @@ public class PageStoreController {
         }
     }
 
+    /**
+     * 门店详情 save
+     * @param request
+     * @param storeBean
+     * @return
+     */
     @PostMapping("/save")
     public BaseResponse<String> save(HttpServletRequest request, @RequestBody Map<String, Object> storeBean) {
         try {
@@ -100,6 +106,12 @@ public class PageStoreController {
         return url;
     }
 
+    /**
+     * 门店详情 update
+     * @param request
+     * @param storeBean
+     * @return
+     */
     @PutMapping("/update")
     public BaseResponse<String> update(HttpServletRequest request, @RequestBody StoreBean storeBean) {
         try {
@@ -111,7 +123,12 @@ public class PageStoreController {
         }
     }
 
-
+    /**
+     * 门店详情 delete
+     * @param request
+     * @param idArray
+     * @return
+     */
     @DeleteMapping("/removeList")
     public BaseResponse<String> removeList(HttpServletRequest request, @RequestBody List<String> idArray) {
         try {

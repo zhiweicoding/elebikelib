@@ -41,7 +41,7 @@ public class PageUserController {
 
 
     /**
-     * query
+     * user query
      */
     @PostMapping("/query")
     public BaseResponse<AdminConsoleUserEntity> query(HttpServletRequest request) {

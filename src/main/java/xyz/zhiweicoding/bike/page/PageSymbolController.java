@@ -70,6 +70,12 @@ public class PageSymbolController {
         }
     }
 
+    /**
+     * 分类页面 save
+     * @param request
+     * @param symbolBean
+     * @return
+     */
     @PostMapping("/save")
     public BaseResponse<String> save(HttpServletRequest request, @RequestBody SymbolBean symbolBean) {
         try {
@@ -82,6 +88,12 @@ public class PageSymbolController {
         }
     }
 
+    /**
+     * 分类页面 update
+     * @param request
+     * @param symbolBean
+     * @return
+     */
     @PutMapping("/update")
     public BaseResponse<String> update(HttpServletRequest request, @RequestBody SymbolBean symbolBean) {
         try {
@@ -94,6 +106,12 @@ public class PageSymbolController {
         }
     }
 
+    /**
+     * 分类页面 remove
+     * @param request
+     * @param id
+     * @return
+     */
     @DeleteMapping("/remove")
     public BaseResponse<String> remove(HttpServletRequest request, @RequestParam String id) {
         try {
@@ -107,6 +125,12 @@ public class PageSymbolController {
         }
     }
 
+    /**
+     * 分类页面 removeList
+     * @param request
+     * @param idArray
+     * @return
+     */
     @DeleteMapping("/removeList")
     public BaseResponse<String> removeList(HttpServletRequest request, @RequestBody List<String> idArray) {
         try {
@@ -120,6 +144,14 @@ public class PageSymbolController {
         }
     }
 
+    /**
+     * 分类页面 exchangeSort
+     * @param request
+     * @param sourceId
+     * @param destId
+     * @return
+     */
+    @Deprecated
     @PostMapping("/exchangeSort")
     public BaseResponse<String> exchangeSort(HttpServletRequest request, @RequestParam String sourceId, @RequestParam String destId) {
         try {

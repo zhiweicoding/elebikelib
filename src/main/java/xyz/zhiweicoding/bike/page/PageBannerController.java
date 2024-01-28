@@ -41,7 +41,7 @@ public class PageBannerController {
 
 
     /**
-     * 分类页面查询
+     * banner 分类页面查询
      * id
      * link
      * imageUrl
@@ -63,6 +63,12 @@ public class PageBannerController {
         }
     }
 
+    /**
+     * banner 保存
+     * @param request
+     * @param param
+     * @return
+     */
     @PostMapping("/save")
     public BaseResponse<String> save(HttpServletRequest request, @RequestBody Map<String, Object> param) {
         try {
@@ -87,6 +93,12 @@ public class PageBannerController {
         }
     }
 
+    /**
+     * banner 更新
+     * @param request
+     * @param param
+     * @return
+     */
     @PutMapping("/update")
     public BaseResponse<String> update(HttpServletRequest request, @RequestBody Map<String, Object> param) {
         try {
@@ -110,6 +122,12 @@ public class PageBannerController {
         }
     }
 
+    /**
+     * banner 删除
+     * @param request
+     * @param idArray
+     * @return
+     */
     @DeleteMapping("/removeList")
     public BaseResponse<String> removeList(HttpServletRequest request, @RequestBody List<String> idArray) {
         try {

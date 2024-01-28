@@ -29,6 +29,13 @@ public class VerifyController {
     @Autowired
     private CosUtil cosUtil;
 
+    /**
+     * 验证用
+     * @param path
+     * @param fileName
+     * @return
+     * @throws IOException
+     */
     @RequestMapping(value = "/{path}/{fileName}", method = {RequestMethod.POST, RequestMethod.HEAD, RequestMethod.OPTIONS, RequestMethod.PUT, RequestMethod.PATCH, RequestMethod.GET})
     public ResponseEntity<InputStreamResource> path(@PathVariable String path, @PathVariable String fileName) throws IOException {
         File tempFile = FileUtil.createTempFile();
