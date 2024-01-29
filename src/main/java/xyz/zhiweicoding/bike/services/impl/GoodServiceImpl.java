@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import xyz.zhiweicoding.bike.constants.ConfigFileConstant;
 import xyz.zhiweicoding.bike.dao.mysql.ConfigDao;
@@ -32,21 +33,17 @@ import java.util.stream.Collectors;
 @Slf4j
 public class GoodServiceImpl extends ServiceImpl<GoodDao, GoodBean> implements GoodService {
 
-    private final GoodDao goodDao;
-    private final SymbolDao symbolDao;
+    @Autowired
+    private SymbolDao symbolDao;
 
-    private final ConfigDao configDao;
+    @Autowired
+    private ConfigDao configDao;
 
-    public GoodServiceImpl(GoodDao goodDao, SymbolDao symbolDao, ConfigDao configDao) {
-        this.goodDao = goodDao;
-        this.symbolDao = symbolDao;
-        this.configDao = configDao;
-    }
 
     @Override
     public IndexEntity getIndex() {
         IndexEntity resultBean = new IndexEntity();
-        List<GoodBean> goodAllList = goodDao.selectList(Wrappers.<GoodBean>lambdaQuery()
+        List<GoodBean> goodAllList = baseMapper.selectList(Wrappers.<GoodBean>lambdaQuery()
                 .eq(GoodBean::getIsDelete, 0));
         List<SymbolBean> symbolAllLists = symbolDao.selectList(Wrappers.<SymbolBean>lambdaQuery()
                 .eq(SymbolBean::getIsDelete, 0));
@@ -153,7 +150,7 @@ public class GoodServiceImpl extends ServiceImpl<GoodDao, GoodBean> implements G
             sendBean.setSymbolName(symbolAllList.get(0).getSymbolName());
         }
 
-        List<GoodBean> goodBeans = goodDao.selectList(wrapper);
+        List<GoodBean> goodBeans = baseMapper.selectList(wrapper);
         sortBySymbol(goodBeans, symbolAllList, sendBean);
 
         return sendBean;

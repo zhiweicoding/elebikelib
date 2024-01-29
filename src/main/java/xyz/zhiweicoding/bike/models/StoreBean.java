@@ -39,5 +39,11 @@ public class StoreBean implements Serializable {
     private int isDelete;
     private long createTime;
     private long modifyTime;
+    @TableField(exist = false)
+    private double distance;
+    @TableField(exist = false)
+    private double lng;
+    @TableField(exist = false)
+    private double lat;
 
 }

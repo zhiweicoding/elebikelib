@@ -1,6 +1,11 @@
 package xyz.zhiweicoding.bike.api;
 
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -15,7 +20,9 @@ import xyz.zhiweicoding.bike.services.StoreService;
 import xyz.zhiweicoding.bike.support.ResponseFactory;
 import xyz.zhiweicoding.bike.vo.api.StoreVo;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 商品页
@@ -38,14 +45,11 @@ public class StoreController {
      * @return {@link List<StoreBean>}
      */
     @PostMapping("/list")
-    @Cacheable(value = "3m", keyGenerator = "cacheJsonKeyGenerator", condition = "#param != null", unless = "#result == null || #result.getIsEmpty()")
+    @Cacheable(value = "30s", keyGenerator = "cacheJsonKeyGenerator", condition = "#param != null", unless = "#result == null || #result.getIsEmpty()")
     public BaseResponse<List<StoreBean>> list(@RequestBody StoreVo param) {
         try {
-            List<StoreBean> list = storeService.list(Wrappers.<StoreBean>lambdaQuery()
-                    .eq(StoreBean::getIsDelete, 0)
-                    .like(StoreBean::getAddress, param.getCityName())
-                    .like(StoreBean::getStoreName, param.getSearchVal()));
-            return ResponseFactory.success(list);
+            List<StoreBean> storeBeans = storeService.queryStoreList(param);
+            return ResponseFactory.success(storeBeans);
         } catch (Exception e) {
             return ResponseFactory.fail(null);
         }

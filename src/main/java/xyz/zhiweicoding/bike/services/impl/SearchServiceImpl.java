@@ -2,9 +2,8 @@ package xyz.zhiweicoding.bike.services.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import xyz.zhiweicoding.bike.dao.mysql.ConfigDao;
-import xyz.zhiweicoding.bike.dao.mysql.GoodDao;
 import xyz.zhiweicoding.bike.dao.mysql.SymbolDao;
 import xyz.zhiweicoding.bike.entity.BaseResponse;
 import xyz.zhiweicoding.bike.entity.api.SearchEntity;
@@ -26,16 +25,8 @@ import java.util.stream.Collectors;
 @Slf4j
 public class SearchServiceImpl implements SearchService {
 
-    private final GoodDao goodDao;
-    private final SymbolDao symbolDao;
-
-    private final ConfigDao configDao;
-
-    public SearchServiceImpl(GoodDao goodDao, SymbolDao symbolDao, ConfigDao configDao) {
-        this.goodDao = goodDao;
-        this.symbolDao = symbolDao;
-        this.configDao = configDao;
-    }
+    @Autowired
+    private SymbolDao symbolDao;
 
     @Override
     public SearchEntity getSearch() {

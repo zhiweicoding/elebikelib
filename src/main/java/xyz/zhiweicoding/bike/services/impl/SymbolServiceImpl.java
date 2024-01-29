@@ -29,18 +29,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class SymbolServiceImpl extends ServiceImpl<SymbolDao, SymbolBean> implements SymbolService {
 
-    private final GoodDao goodDao;
-    private final SymbolDao symbolDao;
-
-    private final ConfigDao configDao;
-
-    public SymbolServiceImpl(GoodDao goodDao, SymbolDao symbolDao, ConfigDao configDao) {
-        this.goodDao = goodDao;
-        this.symbolDao = symbolDao;
-        this.configDao = configDao;
-    }
-
-
 }
 
 

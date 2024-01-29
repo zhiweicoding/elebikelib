@@ -22,4 +22,6 @@ public class StoreVo implements Serializable {
     private String cityName;
     private String searchVal;
     private String storeId;
+    private double lng;
+    private double lat;
 }
