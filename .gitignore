@@ -28,3 +28,6 @@ hs_err_pid*
 /target/
 /src/main/webapp/resources/application-dev.yml
 /src/main/webapp/resources/application-docker.yml
+
+.idea/
+.vscode/
