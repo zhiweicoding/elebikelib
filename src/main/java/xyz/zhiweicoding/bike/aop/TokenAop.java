@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import xyz.zhiweicoding.bike.models.LoginBean;
 import xyz.zhiweicoding.bike.services.LoginService;
-import xyz.zhiweicoding.bike.support.RedisSupport;
+import xyz.zhiweicoding.bike.support.CaffeineSupport;
 import xyz.zhiweicoding.bike.support.ResponseFactory;
 
 import java.util.Map;
@@ -37,10 +37,9 @@ public class TokenAop {
     public void pagePointCut() {
     }
 
-
     @SuppressWarnings("all")
     @Autowired
-    private RedisSupport redisSupport;
+    private CaffeineSupport caffeineSupport;
 
     @Autowired
     @Qualifier(value = "loginService")
@@ -71,8 +70,8 @@ public class TokenAop {
                 }
                 //检测header中是否有Authorization的key，检测redis中是否存在该key，如果存在则放行，否则返回错误信息
                 String authorization = request.getHeader("Authorization");
-                if (redisSupport.exists(authorization)) {
-                    String value = String.valueOf(redisSupport.get(authorization));
+                if (caffeineSupport.exists(authorization)) {
+                    String value = String.valueOf(caffeineSupport.get(authorization));
                     boolean exists = loginService.exists(Wrappers.<LoginBean>lambdaQuery()
                             .eq(LoginBean::getAdminId, value)
                             .eq(LoginBean::getIsDelete, 0)

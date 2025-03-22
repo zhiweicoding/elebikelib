@@ -1,5 +1,6 @@
 package xyz.zhiweicoding.bike.models;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author zhiweicoding.xyz
@@ -32,4 +34,7 @@ public class BikeBean implements Serializable {
     private String prevProductTitle;
     private Date createdAt;
     private Date updatedAt;
+
+    @TableField(exist = false)
+    private List<BikeImageBean> images;
 }

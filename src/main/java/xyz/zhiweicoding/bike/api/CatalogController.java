@@ -2,19 +2,14 @@ package xyz.zhiweicoding.bike.api;
 
 import com.alibaba.fastjson2.JSON;
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.weaver.ast.Var;
-import org.elasticsearch.action.search.SearchRequest;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.client.IndicesClient;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.search.SearchHit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.web.bind.annotation.*;
-import xyz.zhiweicoding.bike.entity.api.CatalogEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import xyz.zhiweicoding.bike.entity.BaseResponse;
+import xyz.zhiweicoding.bike.entity.api.CatalogEntity;
 import xyz.zhiweicoding.bike.services.GoodService;
 import xyz.zhiweicoding.bike.support.ResponseFactory;
 import xyz.zhiweicoding.bike.vo.api.CatalogVo;
@@ -32,9 +27,6 @@ public class CatalogController {
     @Autowired
     @Qualifier(value = "goodService")
     private GoodService goodService;
-
-    @Autowired
-    private RestHighLevelClient restHighLevelClient;
 
     /**
      * 获取目录页的信息

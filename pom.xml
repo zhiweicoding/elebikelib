@@ -12,7 +12,7 @@
     <artifactId>elebikelib</artifactId>
     <version>1.0.1</version>
     <name>elebikelib</name>
-    <description>bike libary</description>
+    <description>elebike libary</description>
     <properties>
         <java.version>11</java.version>
     </properties>
@@ -101,16 +101,6 @@
             <artifactId>commons-io</artifactId>
             <version>2.11.0</version>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-redis</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>redis.clients</groupId>
-            <artifactId>jedis</artifactId>
-            <version>4.2.0</version>
-        </dependency>
 
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
@@ -141,16 +131,19 @@
         </dependency>
 
         <dependency>
-            <groupId>org.elasticsearch.client</groupId>
-            <artifactId>elasticsearch-rest-high-level-client</artifactId>
-            <version>7.5.2</version>
-        </dependency>
-        <dependency>
             <groupId>org.dom4j</groupId>
             <artifactId>dom4j</artifactId>
             <version>2.1.4</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+        </dependency>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

@@ -1,101 +1,86 @@
 package xyz.zhiweicoding.bike.config;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.caffeine.CaffeineCache;
 import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.cache.RedisCacheConfiguration;
-import org.springframework.data.redis.cache.RedisCacheManager;
-import org.springframework.data.redis.cache.RedisCacheWriter;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.*;
 
-import java.time.Duration;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+
+
 
 /**
  * @Created by zhiwei on 2022/4/4.
  */
 @Configuration
+@EnableCaching
 public class CacheConfig {
 
     @Bean
-    public CacheManager cacheManager(RedisConnectionFactory connectionFactory) {
-        RedisSerializer<String> stringRedisSerializer = new StringRedisSerializer();
-        //default信息缓存配置
-        RedisCacheConfiguration default1h = RedisCacheConfiguration.defaultCacheConfig()
-                // 设置过期时间
-                .entryTtl(Duration.ofHours(1))
-                // String的方式序列化key
-                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(stringRedisSerializer))
-                // jackson的方式序列化value
-                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jsonSerializer()))
-                // 空值不缓存
-                .disableCachingNullValues()
-                // 设置缓存名称前缀
-                .prefixCacheNameWith("default_1h:");
-        RedisCacheConfiguration h1 = RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofHours(1)).serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(stringRedisSerializer)).serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jsonSerializer())).disableCachingNullValues().prefixCacheNameWith("srw_");
-        RedisCacheConfiguration m30 = RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(30)).serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(stringRedisSerializer)).serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jsonSerializer())).disableCachingNullValues().prefixCacheNameWith("srw_");
-        RedisCacheConfiguration m15 = RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(15)).serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(stringRedisSerializer)).serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jsonSerializer())).disableCachingNullValues().prefixCacheNameWith("srw_");
-        RedisCacheConfiguration m3 = RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(3)).serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(stringRedisSerializer)).serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jsonSerializer())).disableCachingNullValues().prefixCacheNameWith("srw_");
-        RedisCacheConfiguration d30 = RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofDays(30)).serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(stringRedisSerializer)).serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jsonSerializer())).disableCachingNullValues().prefixCacheNameWith("srw_");
-        RedisCacheConfiguration h24 = RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofHours(24)).serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(stringRedisSerializer)).serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jsonSerializer())).disableCachingNullValues().prefixCacheNameWith("srw_");
-        RedisCacheConfiguration s60 = RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofSeconds(60)).serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(stringRedisSerializer)).serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jsonSerializer())).disableCachingNullValues().prefixCacheNameWith("srw_");
-        RedisCacheConfiguration s30 = RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofSeconds(30)).serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(stringRedisSerializer)).serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jsonSerializer())).disableCachingNullValues().prefixCacheNameWith("srw_");
-
-        Map<String, RedisCacheConfiguration> redisCacheConfigurationMap = new LinkedHashMap<>(8) {
-            private static final long serialVersionUID = 2474073019770319870L;
-
-            {
-                put("60s", s60);
-                put("30s", s30);
-                put("3m", m3);
-                put("15m", m15);
-                put("30m", m30);
-                put("24h", h24);
-                put("1h", h1);
-                put("30d", d30);
-                put("default", default1h);
-            }
-        };
-
-        return new RedisCacheManager(RedisCacheWriter.nonLockingRedisCacheWriter(connectionFactory), default1h, redisCacheConfigurationMap);
+    public CacheManager cacheManager() {
+        // 自定义 CacheManager 支持按名称加载不同配置的缓存
+        CustomCaffeineCacheManager cacheManager = new CustomCaffeineCacheManager();
+        cacheManager.setCaches(Arrays.asList(
+                buildCache("60s", 60, TimeUnit.SECONDS),
+                buildCache("30s", 30, TimeUnit.SECONDS),
+                buildCache("3m", 3, TimeUnit.MINUTES),
+                buildCache("15m", 15, TimeUnit.MINUTES),
+                buildCache("30m", 30, TimeUnit.MINUTES),
+                buildCache("1h", 1, TimeUnit.HOURS),
+                buildCache("24h", 24, TimeUnit.HOURS),
+                buildCache("30d", 30, TimeUnit.DAYS),
+                // default 配置，默认过期 1 小时，可根据业务调整
+                buildCache("default", 1, TimeUnit.HOURS)
+        ));
+        return cacheManager;
     }
 
-    @Bean
-    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
-        RedisTemplate<String, Object> template = new RedisTemplate<>();
-        template.setConnectionFactory(connectionFactory);
-        RedisSerializer<Object> jackson2JsonRedisSerializer = jsonSerializer();
-        StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
-        // key采用String的序列化方式
-        template.setKeySerializer(stringRedisSerializer);
-        // hash的key也采用String的序列化方式
-        template.setHashKeySerializer(stringRedisSerializer);
-        // value序列化方式采用jackson
-        template.setValueSerializer(jackson2JsonRedisSerializer);
-        // hash的value序列化方式采用jackson
-        template.setHashValueSerializer(jackson2JsonRedisSerializer);
-        template.afterPropertiesSet();
-        return template;
-    }
-
-    private RedisSerializer<Object> jsonSerializer() {
-        ObjectMapper om = new ObjectMapper();
-        om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-        om.activateDefaultTyping(LaissezFaireSubTypeValidator.instance, ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
-        return new GenericJackson2JsonRedisSerializer(om);
+    private CaffeineCache buildCache(String cacheName, long duration, TimeUnit timeUnit) {
+        return new CaffeineCache(cacheName,
+                Caffeine.newBuilder()
+                        .expireAfterWrite(duration, timeUnit)
+                        .maximumSize(1000)
+                        .build());
     }
 
     @Bean
     public KeyGenerator cacheJsonKeyGenerator() {
         return new JsonKeyGenerator();
+    }
+}
+
+/**
+ * 自定义 CacheManager，支持根据预先定义的 Cache 集合来返回对应 Cache 对象
+ */
+class CustomCaffeineCacheManager implements CacheManager {
+
+    private Collection<? extends Cache> caches = Collections.emptyList();
+
+    @Override
+    public Cache getCache(String name) {
+        for (Cache cache : caches) {
+            if (cache.getName().equals(name)) {
+                return cache;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public Collection<String> getCacheNames() {
+        List<String> names = new ArrayList<>();
+        for (Cache cache : caches) {
+            names.add(cache.getName());
+        }
+        return names;
+    }
+
+    public void setCaches(Collection<? extends Cache> caches) {
+        this.caches = caches;
     }
 }

@@ -1,24 +1,20 @@
 package xyz.zhiweicoding.bike.page;
 
 import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import xyz.zhiweicoding.bike.entity.BaseResponse;
 import xyz.zhiweicoding.bike.entity.api.AdminConsoleUserEntity;
 import xyz.zhiweicoding.bike.models.LoginBean;
 import xyz.zhiweicoding.bike.services.LoginService;
-import xyz.zhiweicoding.bike.support.RedisSupport;
+import xyz.zhiweicoding.bike.support.CaffeineSupport;
 import xyz.zhiweicoding.bike.support.ResponseFactory;
-
-import java.util.Map;
 
 /**
  * page login query
@@ -37,8 +33,7 @@ public class PageUserController {
 
     @SuppressWarnings("all")
     @Autowired
-    private RedisSupport redisSupport;
-
+    private CaffeineSupport caffeineSupport;
 
     /**
      * user query
@@ -49,7 +44,7 @@ public class PageUserController {
         log.debug("login q,入参 : {}", authorization);
         try {
 
-            String value = String.valueOf(redisSupport.get(authorization));
+            String value = String.valueOf(caffeineSupport.get(authorization));
             LoginBean loginBean = loginService.getOne(Wrappers.<LoginBean>lambdaQuery().eq(LoginBean::getAdminId, value).select(LoginBean::getAdminInfo));
             String adminInfo = loginBean.getAdminInfo();
             AdminConsoleUserEntity entity = JSON.parseObject(adminInfo, AdminConsoleUserEntity.class);

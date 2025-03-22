@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import xyz.zhiweicoding.bike.entity.BaseResponse;
 import xyz.zhiweicoding.bike.models.LoginBean;
 import xyz.zhiweicoding.bike.services.LoginService;
-import xyz.zhiweicoding.bike.support.RedisSupport;
+import xyz.zhiweicoding.bike.support.CaffeineSupport;
 import xyz.zhiweicoding.bike.support.ResponseFactory;
 
 import java.util.List;
@@ -35,7 +35,7 @@ public class PageLoginController {
 
     @SuppressWarnings("all")
     @Autowired
-    private RedisSupport redisSupport;
+    private CaffeineSupport caffeineSupport;
 
     /**
      * login in
@@ -63,7 +63,7 @@ public class PageLoginController {
                                     .eq(LoginBean::getAdminId, adminId)
                     );
                     String strMd5 = "Bearer " + MD5.create().digestHex(username + password + timestamp);
-                    redisSupport.set(strMd5, adminId, 60 * 60 * 24 * 7L, TimeUnit.SECONDS);
+                    caffeineSupport.set(strMd5, adminId, 60 * 60 * 24 * 7L, TimeUnit.SECONDS);
                 }
                 return ResponseFactory.success("登录成功");
             } else {
@@ -82,8 +82,8 @@ public class PageLoginController {
     public BaseResponse<String> out(@RequestHeader("Authorization") String authorization) {
         log.debug("login out,入参 authorization : {}", authorization);
         try {
-            if (redisSupport.exists(authorization)) {
-                redisSupport.remove(authorization);
+            if (caffeineSupport.exists(authorization)) {
+                caffeineSupport.remove(authorization);
                 return ResponseFactory.success("退出成功");
             } else {
                 return ResponseFactory.noToken("无此账户信息");
