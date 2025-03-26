@@ -58,6 +58,16 @@ public class PageBikeController {
             wrapper.orderByDesc(BikeBean::getUpdatedAt);
 
             Page<BikeBean> pageResult = bikeService.page(page, wrapper);
+
+            // 为每个 BikeBean 加载关联的图片
+            for (BikeBean bike : pageResult.getRecords()) {
+                LambdaQueryWrapper<BikeImageBean> imageWrapper = Wrappers.<BikeImageBean>lambdaQuery()
+                        .eq(BikeImageBean::getProductId, bike.getProductId())
+                        .orderByDesc(BikeImageBean::getIsMain);
+                List<BikeImageBean> images = bikeImageService.list(imageWrapper);
+                bike.setImages(images);
+            }
+
             AntArrayEntity<BikeBean> result = new AntArrayEntity<>((int) pageResult.getCurrent(),
                     pageResult.getRecords(), pageSize, (int) pageResult.getTotal());
             return ResponseFactory.success(result);
@@ -76,7 +86,19 @@ public class PageBikeController {
             Date now = new Date();
             bikeBean.setCreatedAt(now);
             bikeBean.setUpdatedAt(now);
+
+            // 先保存自行车基本信息
             bikeService.save(bikeBean);
+
+            // 保存关联的图片信息
+            List<BikeImageBean> images = bikeBean.getImages();
+            if (images != null && !images.isEmpty()) {
+                for (BikeImageBean image : images) {
+                    image.setProductId(bikeBean.getProductId());
+                    bikeImageService.save(image);
+                }
+            }
+
             return ResponseFactory.success(bikeBean.getProductId());
         } catch (Exception e) {
             log.error("保存车辆 error：" + e.getMessage(), e);
@@ -91,7 +113,23 @@ public class PageBikeController {
     public BaseResponse<String> update(HttpServletRequest request, @RequestBody BikeBean bikeBean) {
         try {
             bikeBean.setUpdatedAt(new Date());
+
+            // 更新自行车基本信息
             bikeService.updateById(bikeBean);
+
+            // 更新图片信息：先删除原有图片，再保存新图片
+            LambdaQueryWrapper<BikeImageBean> wrapper = Wrappers.<BikeImageBean>lambdaQuery()
+                    .eq(BikeImageBean::getProductId, bikeBean.getProductId());
+            bikeImageService.remove(wrapper);
+
+            List<BikeImageBean> images = bikeBean.getImages();
+            if (images != null && !images.isEmpty()) {
+                for (BikeImageBean image : images) {
+                    image.setProductId(bikeBean.getProductId());
+                    bikeImageService.save(image);
+                }
+            }
+
             return ResponseFactory.success(bikeBean.getProductId());
         } catch (Exception e) {
             log.error("更新车辆 error：" + e.getMessage(), e);
