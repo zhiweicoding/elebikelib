@@ -1,5 +1,6 @@
 package xyz.zhiweicoding.bike.page;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,6 +16,7 @@ import xyz.zhiweicoding.bike.models.BikeBean;
 import xyz.zhiweicoding.bike.models.BikeImageBean;
 import xyz.zhiweicoding.bike.services.BikeImageService;
 import xyz.zhiweicoding.bike.services.BikeService;
+import xyz.zhiweicoding.bike.support.ResponseFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -72,7 +74,7 @@ class PageBikeControllerTest {
         image.setProductId("test001");
         image.setImagePath("/test.jpg");
         images.add(image);
-        when(bikeImageService.list(any())).thenReturn(images);
+        when(bikeImageService.list(any(LambdaQueryWrapper.class))).thenReturn(images);
 
         // 执行测试
         BaseResponse<AntArrayEntity<BikeBean>> response = pageBikeController.index(request, title, category, current,
@@ -80,11 +82,13 @@ class PageBikeControllerTest {
 
         // 验证结果
         assertNotNull(response);
-        assertTrue(response.isSuccess());
-        assertEquals(1, response.getData().getTotal());
-        assertEquals(1, response.getData().getList().size());
-        assertEquals(title, response.getData().getList().get(0).getTitle());
-        assertNotNull(response.getData().getList().get(0).getImages());
+        assertEquals(ResponseFactory.StatsEnum.SUCCESS.getCode(), response.getMsgCode());
+        AntArrayEntity<BikeBean> data = response.getMsgBody();
+        assertNotNull(data);
+        assertEquals(1, data.getTotal());
+        assertEquals(1, data.getData().size());
+        assertEquals(title, data.getData().get(0).getTitle());
+        assertNotNull(data.getData().get(0).getImages());
     }
 
     @Test
@@ -108,8 +112,8 @@ class PageBikeControllerTest {
 
         // 验证结果
         assertNotNull(response);
-        assertTrue(response.isSuccess());
-        assertEquals("test001", response.getData());
+        assertEquals(ResponseFactory.StatsEnum.SUCCESS.getCode(), response.getMsgCode());
+        assertEquals("test001", response.getMsgBody());
         verify(bikeService, times(1)).save(any());
         verify(bikeImageService, times(1)).save(any());
     }
@@ -136,8 +140,8 @@ class PageBikeControllerTest {
 
         // 验证结果
         assertNotNull(response);
-        assertTrue(response.isSuccess());
-        assertEquals("test001", response.getData());
+        assertEquals(ResponseFactory.StatsEnum.SUCCESS.getCode(), response.getMsgCode());
+        assertEquals("test001", response.getMsgBody());
         verify(bikeService, times(1)).updateById(any());
         verify(bikeImageService, times(1)).remove(any());
         verify(bikeImageService, times(1)).save(any());
@@ -157,8 +161,8 @@ class PageBikeControllerTest {
 
         // 验证结果
         assertNotNull(response);
-        assertTrue(response.isSuccess());
-        assertEquals("test001,test002", response.getData());
+        assertEquals(ResponseFactory.StatsEnum.SUCCESS.getCode(), response.getMsgCode());
+        assertEquals("test001,test002", response.getMsgBody());
         verify(bikeService, times(1)).removeByIds(idArray);
         verify(bikeImageService, times(1)).remove(any());
     }
@@ -178,8 +182,8 @@ class PageBikeControllerTest {
 
         // 验证结果
         assertNotNull(response);
-        assertTrue(response.isSuccess());
-        assertEquals("test001", response.getData());
+        assertEquals(ResponseFactory.StatsEnum.SUCCESS.getCode(), response.getMsgCode());
+        assertEquals("test001", response.getMsgBody());
         verify(bikeImageService, times(1)).save(image);
     }
 
@@ -194,16 +198,17 @@ class PageBikeControllerTest {
         images.add(image);
 
         // 模拟服务行为
-        when(bikeImageService.list(any())).thenReturn(images);
+        when(bikeImageService.list(any(LambdaQueryWrapper.class))).thenReturn(images);
 
         // 执行测试
         BaseResponse<List<BikeImageBean>> response = pageBikeController.getImages(request, productId);
 
         // 验证结果
         assertNotNull(response);
-        assertTrue(response.isSuccess());
-        assertEquals(1, response.getData().size());
-        assertEquals(productId, response.getData().get(0).getProductId());
-        verify(bikeImageService, times(1)).list(any());
+        assertEquals(ResponseFactory.StatsEnum.SUCCESS.getCode(), response.getMsgCode());
+        List<BikeImageBean> data = response.getMsgBody();
+        assertEquals(1, data.size());
+        assertEquals(productId, data.get(0).getProductId());
+        verify(bikeImageService, times(1)).list((Wrapper<BikeImageBean>) any());
     }
 }

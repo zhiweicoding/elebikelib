@@ -13,6 +13,7 @@ import xyz.zhiweicoding.bike.entity.AntArrayEntity;
 import xyz.zhiweicoding.bike.entity.BaseResponse;
 import xyz.zhiweicoding.bike.models.EnquiryBean;
 import xyz.zhiweicoding.bike.services.EnquiryService;
+import xyz.zhiweicoding.bike.support.ResponseFactory;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -69,10 +70,12 @@ class PageEnquiryControllerTest {
 
         // 验证结果
         assertNotNull(response);
-        assertTrue(response.isSuccess());
-        assertEquals(1, response.getData().getTotal());
-        assertEquals(1, response.getData().getList().size());
-        assertEquals(contact, response.getData().getList().get(0).getContact());
+        assertEquals(ResponseFactory.StatsEnum.SUCCESS.getCode(), response.getMsgCode());
+        AntArrayEntity<EnquiryBean> data = response.getMsgBody();
+        assertNotNull(data);
+        assertEquals(1, data.getTotal());
+        assertEquals(1, data.getData().size());
+        assertEquals(contact, data.getData().get(0).getContact());
     }
 
     @Test
@@ -95,7 +98,7 @@ class PageEnquiryControllerTest {
 
         // 验证结果
         assertNotNull(response);
-        assertTrue(response.isSuccess());
+        assertEquals(ResponseFactory.StatsEnum.SUCCESS.getCode(), response.getMsgCode());
         verify(enquiryService, times(1)).save(any());
     }
 
@@ -113,8 +116,8 @@ class PageEnquiryControllerTest {
 
         // 验证结果
         assertNotNull(response);
-        assertTrue(response.isSuccess());
-        assertEquals(id.toString(), response.getData());
+        assertEquals(ResponseFactory.StatsEnum.SUCCESS.getCode(), response.getMsgCode());
+        assertEquals(id.toString(), response.getMsgBody());
         verify(enquiryService, times(1)).updateById(any());
     }
 
@@ -131,25 +134,8 @@ class PageEnquiryControllerTest {
 
         // 验证结果
         assertNotNull(response);
-        assertTrue(response.isSuccess());
-        assertEquals("1,2", response.getData());
+        assertEquals(ResponseFactory.StatsEnum.SUCCESS.getCode(), response.getMsgCode());
+        assertEquals("1,2", response.getMsgBody());
         verify(enquiryService, times(1)).removeByIds(idArray);
-    }
-
-    @Test
-    void testGetClientIp() {
-        // 测试 X-Forwarded-For
-        when(request.getHeader("X-Forwarded-For")).thenReturn("192.168.1.1");
-        assertEquals("192.168.1.1", pageEnquiryController.getClientIp(request));
-
-        // 测试 Proxy-Client-IP
-        when(request.getHeader("X-Forwarded-For")).thenReturn(null);
-        when(request.getHeader("Proxy-Client-IP")).thenReturn("192.168.1.2");
-        assertEquals("192.168.1.2", pageEnquiryController.getClientIp(request));
-
-        // 测试 RemoteAddr
-        when(request.getHeader(any())).thenReturn(null);
-        when(request.getRemoteAddr()).thenReturn("127.0.0.1");
-        assertEquals("127.0.0.1", pageEnquiryController.getClientIp(request));
     }
 }

@@ -1,0 +1,5 @@
+INSERT INTO `bike_images` (`id`, `product_id`, `image_path`, `is_main`) VALUES (1, '9313098', 'https://bodocn-1256485110.cos.ap-beijing.myqcloud.com/comdata/87327/product/20230828163427EC9EEAA1C6E9AE38_b.jpg', 1);
+INSERT INTO `bike_images` (`id`, `product_id`, `image_path`, `is_main`) VALUES (3, '9313096', 'https://bodocn-1256485110.cos.ap-beijing.myqcloud.com/comdata/87327/product/20230828163412DA63A85D538C5C14_b.jpg', 1);
+INSERT INTO `bike_images` (`id`, `product_id`, `image_path`, `is_main`) VALUES (5, '9313095', 'https://bodocn-1256485110.cos.ap-beijing.myqcloud.com/comdata/87327/product/20230828163353B85B2F6D60568712_b.jpg', 1);
+INSERT INTO `bike_images` (`id`, `product_id`, `image_path`, `is_main`) VALUES (7, '6318440', 'https://bodocn-1256485110.cos.ap-beijing.myqcloud.com/comdata/87327/product/20211110100245F89FAB7F9C417909_b.jpg', 1);
+INSERT INTO `bike_images` (`id`, `product_id`, `image_path`, `is_main`) VALUES (9, '6318439', 'https://bodocn-1256485110.cos.ap-beijing.myqcloud.com/comdata/87327/product/20211110100245046334324EDB4577_b.jpg', 1);

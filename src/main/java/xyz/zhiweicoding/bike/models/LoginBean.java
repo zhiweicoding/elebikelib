@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serial;
@@ -16,7 +15,6 @@ import java.io.Serializable;
  * @date 1/2/24
  * @email diaozhiwei2k@gmail.com
  */
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName("t_admin")
@@ -33,5 +31,117 @@ public class LoginBean implements Serializable {
     private long modifyTime;
     private String adminInfo;
     private int isDelete;
+
+    /**
+     * @return String return the adminId
+     */
+    public String getAdminId() {
+        return adminId;
+    }
+
+    /**
+     * @param adminId the adminId to set
+     */
+    public void setAdminId(String adminId) {
+        this.adminId = adminId;
+    }
+
+    /**
+     * @return String return the username
+     */
+    public String getUsername() {
+        return username;
+    }
+
+    /**
+     * @param username the username to set
+     */
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    /**
+     * @return String return the password
+     */
+    public String getPassword() {
+        return password;
+    }
+
+    /**
+     * @param password the password to set
+     */
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    /**
+     * @return int return the adminRole
+     */
+    public int getAdminRole() {
+        return adminRole;
+    }
+
+    /**
+     * @param adminRole the adminRole to set
+     */
+    public void setAdminRole(int adminRole) {
+        this.adminRole = adminRole;
+    }
+
+    /**
+     * @return long return the createTime
+     */
+    public long getCreateTime() {
+        return createTime;
+    }
+
+    /**
+     * @param createTime the createTime to set
+     */
+    public void setCreateTime(long createTime) {
+        this.createTime = createTime;
+    }
+
+    /**
+     * @return long return the modifyTime
+     */
+    public long getModifyTime() {
+        return modifyTime;
+    }
+
+    /**
+     * @param modifyTime the modifyTime to set
+     */
+    public void setModifyTime(long modifyTime) {
+        this.modifyTime = modifyTime;
+    }
+
+    /**
+     * @return String return the adminInfo
+     */
+    public String getAdminInfo() {
+        return adminInfo;
+    }
+
+    /**
+     * @param adminInfo the adminInfo to set
+     */
+    public void setAdminInfo(String adminInfo) {
+        this.adminInfo = adminInfo;
+    }
+
+    /**
+     * @return int return the isDelete
+     */
+    public int getIsDelete() {
+        return isDelete;
+    }
+
+    /**
+     * @param isDelete the isDelete to set
+     */
+    public void setIsDelete(int isDelete) {
+        this.isDelete = isDelete;
+    }
 
 }

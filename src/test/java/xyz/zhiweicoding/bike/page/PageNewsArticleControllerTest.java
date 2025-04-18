@@ -13,6 +13,7 @@ import xyz.zhiweicoding.bike.entity.AntArrayEntity;
 import xyz.zhiweicoding.bike.entity.BaseResponse;
 import xyz.zhiweicoding.bike.models.NewsArticleBean;
 import xyz.zhiweicoding.bike.services.NewsArticleService;
+import xyz.zhiweicoding.bike.support.ResponseFactory;
 import xyz.zhiweicoding.bike.utils.GeneratorUtil;
 
 import java.util.Arrays;
@@ -68,11 +69,11 @@ class PageNewsArticleControllerTest {
 
         // 验证结果
         assertNotNull(response);
-        assertTrue(response.isSuccess());
-        assertEquals(1, response.getData().getTotal());
-        assertEquals(1, response.getData().getList().size());
-        assertEquals(title, response.getData().getList().get(0).getTitle());
-        assertEquals(author, response.getData().getList().get(0).getAuthor());
+        assertEquals(ResponseFactory.StatsEnum.SUCCESS.getCode(), response.getMsgCode());
+        assertEquals(1, response.getMsgBody().getTotal());
+        assertEquals(1, response.getMsgBody().getData().size());
+        assertEquals(title, response.getMsgBody().getData().get(0).getTitle());
+        assertEquals(author, response.getMsgBody().getData().get(0).getAuthor());
     }
 
     @Test
@@ -96,8 +97,8 @@ class PageNewsArticleControllerTest {
 
         // 验证结果
         assertNotNull(response);
-        assertTrue(response.isSuccess());
-        assertEquals(articleId, response.getData());
+        assertEquals(ResponseFactory.StatsEnum.SUCCESS.getCode(), response.getMsgCode());
+        assertEquals(articleId, response.getMsgBody());
         verify(newsArticleService, times(1)).save(any());
     }
 
@@ -117,8 +118,8 @@ class PageNewsArticleControllerTest {
 
         // 验证结果
         assertNotNull(response);
-        assertTrue(response.isSuccess());
-        assertEquals("NEWS001", response.getData());
+        assertEquals(ResponseFactory.StatsEnum.SUCCESS.getCode(), response.getMsgCode());
+        assertEquals("NEWS001", response.getMsgBody());
         verify(newsArticleService, times(1)).updateById(any());
     }
 
@@ -135,8 +136,8 @@ class PageNewsArticleControllerTest {
 
         // 验证结果
         assertNotNull(response);
-        assertTrue(response.isSuccess());
-        assertEquals("NEWS001,NEWS002", response.getData());
+        assertEquals(ResponseFactory.StatsEnum.SUCCESS.getCode(), response.getMsgCode());
+        assertEquals("NEWS001,NEWS002", response.getMsgBody());
         verify(newsArticleService, times(1)).removeByIds(idArray);
     }
 }
