@@ -1,16 +1,13 @@
 package xyz.zhiweicoding.bike.api;
 
-import com.alibaba.fastjson2.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 import xyz.zhiweicoding.bike.entity.BaseResponse;
 import xyz.zhiweicoding.bike.entity.api.IndexEntity;
 import xyz.zhiweicoding.bike.services.GoodService;
 import xyz.zhiweicoding.bike.support.ResponseFactory;
-import xyz.zhiweicoding.bike.vo.api.IndexVo;
 
 /**
  * 首页

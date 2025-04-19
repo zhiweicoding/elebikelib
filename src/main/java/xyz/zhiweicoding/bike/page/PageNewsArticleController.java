@@ -1,5 +1,7 @@
 package xyz.zhiweicoding.bike.page;
 
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.TypeReference;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -14,10 +16,8 @@ import xyz.zhiweicoding.bike.entity.AntArrayEntity;
 import xyz.zhiweicoding.bike.entity.BaseResponse;
 import xyz.zhiweicoding.bike.models.NewsArticleBean;
 import xyz.zhiweicoding.bike.services.NewsArticleService;
+import xyz.zhiweicoding.bike.support.CaffeineSupport;
 import xyz.zhiweicoding.bike.support.ResponseFactory;
-import xyz.zhiweicoding.bike.utils.GeneratorUtil;
-
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -30,10 +30,14 @@ import java.util.List;
 public class PageNewsArticleController {
 
     private static final Logger log = LoggerFactory.getLogger(PageNewsArticleController.class);
+    private static final String CACHE_PREFIX = "page:news:";
 
     @Autowired
     @Qualifier(value = "newsArticleService")
     private NewsArticleService newsArticleService;
+
+    @Autowired
+    private CaffeineSupport caffeineSupport;
 
     /**
      * news article page index query
@@ -43,6 +47,20 @@ public class PageNewsArticleController {
             String title, String author,
             int current, int pageSize) {
         try {
+            // 生成缓存键
+            String cacheKey = generateCacheKey(title, author, current, pageSize);
+
+            // 尝试从缓存获取
+            if (caffeineSupport.exists(cacheKey)) {
+                String cachedResult = String.valueOf(caffeineSupport.get(cacheKey));
+                if (cachedResult != null) {
+                    log.debug("从缓存获取数据, key: {}", cacheKey);
+                    return JSON.parseObject(cachedResult,
+                            new TypeReference<BaseResponse<AntArrayEntity<NewsArticleBean>>>() {
+                            });
+                }
+            }
+
             Page<NewsArticleBean> page = new Page<>(current, pageSize);
             LambdaQueryWrapper<NewsArticleBean> wrapper = Wrappers.<NewsArticleBean>lambdaQuery();
 
@@ -58,7 +76,12 @@ public class PageNewsArticleController {
             Page<NewsArticleBean> pageResult = newsArticleService.page(page, wrapper);
             AntArrayEntity<NewsArticleBean> result = new AntArrayEntity<>((int) pageResult.getCurrent(),
                     pageResult.getRecords(), pageSize, (int) pageResult.getTotal());
-            return ResponseFactory.success(result);
+
+            BaseResponse<AntArrayEntity<NewsArticleBean>> response = ResponseFactory.success(result);
+            // 将结果存入缓存
+            caffeineSupport.set(cacheKey, JSON.toJSONString(response));
+
+            return response;
         } catch (Exception e) {
             log.error("新闻文章页面查询 error：" + e.getMessage(), e);
             return ResponseFactory.fail(null);
@@ -71,10 +94,9 @@ public class PageNewsArticleController {
     @PostMapping("/save")
     public BaseResponse<String> save(HttpServletRequest request, @RequestBody NewsArticleBean newsArticleBean) {
         try {
-            newsArticleBean.setArticleId(GeneratorUtil.getCommonId());
-            newsArticleBean.setHits(0);
-            newsArticleBean.setCreatedAt(new Date());
-            newsArticleService.save(newsArticleBean);
+            newsArticleService.saveNewsArticle(newsArticleBean);
+            // 保存后清除缓存
+            clearNewsCache();
             return ResponseFactory.success(newsArticleBean.getArticleId());
         } catch (Exception e) {
             log.error("保存新闻文章 error：" + e.getMessage(), e);
@@ -88,7 +110,9 @@ public class PageNewsArticleController {
     @PutMapping("/update")
     public BaseResponse<String> update(HttpServletRequest request, @RequestBody NewsArticleBean newsArticleBean) {
         try {
-            newsArticleService.updateById(newsArticleBean);
+            newsArticleService.updateNewsArticle(newsArticleBean);
+            // 更新后清除缓存
+            clearNewsCache();
             return ResponseFactory.success(newsArticleBean.getArticleId());
         } catch (Exception e) {
             log.error("更新新闻文章 error：" + e.getMessage(), e);
@@ -102,11 +126,32 @@ public class PageNewsArticleController {
     @DeleteMapping("/removeList")
     public BaseResponse<String> removeList(HttpServletRequest request, @RequestBody List<String> idArray) {
         try {
-            newsArticleService.removeByIds(idArray);
+            log.info("删除新闻文章 idArray：" + idArray);
+            newsArticleService.remove(Wrappers.<NewsArticleBean>lambdaQuery()
+                    .in(NewsArticleBean::getArticleId, idArray));
+            // 删除后清除缓存
+            clearNewsCache();
             return ResponseFactory.success(String.join(",", idArray));
         } catch (Exception e) {
             log.error("删除新闻文章 error：" + e.getMessage(), e);
             return ResponseFactory.fail(null);
         }
+    }
+
+    /**
+     * 生成缓存键
+     */
+    private String generateCacheKey(String title, String author, int current, int pageSize) {
+        return CACHE_PREFIX + "index:" +
+                (title == null ? "" : title) + ":" +
+                (author == null ? "" : author) + ":" +
+                current + ":" + pageSize;
+    }
+
+    /**
+     * A清除新闻相关缓存
+     */
+    private void clearNewsCache() {
+        caffeineSupport.removePattern(CACHE_PREFIX + "*");
     }
 }

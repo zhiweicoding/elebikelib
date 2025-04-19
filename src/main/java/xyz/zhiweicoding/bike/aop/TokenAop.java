@@ -2,11 +2,12 @@ package xyz.zhiweicoding.bike.aop;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -25,9 +26,10 @@ import java.util.Map;
  * @email diaozhiwei2k@gmail.com
  */
 @Aspect
-@Slf4j
 @Component
 public class TokenAop {
+
+    private static final Logger log = LoggerFactory.getLogger(TokenAop.class);
 
     @Pointcut("execution(public * xyz.zhiweicoding.bike.api.*.*(..)) ")
     public void apiPointCut() {
@@ -68,7 +70,7 @@ public class TokenAop {
                 for (String key : parameterMap.keySet()) {
                     log.debug("参数：{}入参：{}", key, parameterMap.get(key));
                 }
-                //检测header中是否有Authorization的key，检测redis中是否存在该key，如果存在则放行，否则返回错误信息
+                // 检测header中是否有Authorization的key，检测redis中是否存在该key，如果存在则放行，否则返回错误信息
                 String authorization = request.getHeader("Authorization");
                 if (caffeineSupport.exists(authorization)) {
                     String value = String.valueOf(caffeineSupport.get(authorization));

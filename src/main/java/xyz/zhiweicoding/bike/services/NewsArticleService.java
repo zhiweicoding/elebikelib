@@ -9,5 +9,9 @@ import xyz.zhiweicoding.bike.models.NewsArticleBean;
  * @email diaozhiwei2k@gmail.com
  */
 public interface NewsArticleService extends IService<NewsArticleBean> {
-    // 可以在这里添加自定义的业务方法
+
+    void saveNewsArticle(NewsArticleBean newsArticleBean);
+
+    void updateNewsArticle(NewsArticleBean newsArticleBean);
+
 }
