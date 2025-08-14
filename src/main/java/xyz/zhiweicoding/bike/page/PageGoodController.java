@@ -220,10 +220,9 @@ public class PageGoodController {
                     .eq(BikeBean::getProductId, productId));
 
             // 更新bikeimg记录 - 更新主图
-            String imageProductId = "i" + goodBean.getGoodId().substring(1);
             bikeImageService.update(null, Wrappers.<BikeImageBean>lambdaUpdate()
                     .set(BikeImageBean::getImagePath, goodBean.getListPicUrl())
-                    .eq(BikeImageBean::getProductId, imageProductId)
+                    .eq(BikeImageBean::getProductId, productId)
                     .eq(BikeImageBean::getIsMain, 1));
 
             log.debug("Updated related bike data for goodId: {}", goodBean.getGoodId());
