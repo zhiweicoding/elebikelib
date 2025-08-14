@@ -14,11 +14,16 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 import xyz.zhiweicoding.bike.entity.AntArrayEntity;
 import xyz.zhiweicoding.bike.entity.BaseResponse;
+import xyz.zhiweicoding.bike.models.BikeBean;
+import xyz.zhiweicoding.bike.models.BikeImageBean;
 import xyz.zhiweicoding.bike.models.GoodBean;
+import xyz.zhiweicoding.bike.services.BikeImageService;
+import xyz.zhiweicoding.bike.services.BikeService;
 import xyz.zhiweicoding.bike.services.GoodService;
 import xyz.zhiweicoding.bike.support.CaffeineSupport;
 import xyz.zhiweicoding.bike.support.ResponseFactory;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -40,6 +45,12 @@ public class PageGoodController {
 
     @Autowired
     private CaffeineSupport caffeineSupport;
+
+    @Autowired
+    private BikeService bikeService;
+
+    @Autowired
+    private BikeImageService bikeImageService;
 
     /**
      * good page index query
@@ -118,7 +129,7 @@ public class PageGoodController {
 
     /**
      * good page update
-     * 
+     *
      * @param request
      * @param goodBean
      * @return
@@ -127,6 +138,10 @@ public class PageGoodController {
     public BaseResponse<String> update(HttpServletRequest request, @RequestBody GoodBean goodBean) {
         try {
             goodService.updateById(goodBean);
+
+            // 同时更新对应的bike记录
+            updateRelatedBikeData(goodBean);
+
             // 更新后清除缓存
             clearGoodCache();
             return ResponseFactory.success(goodBean.getGoodId());
@@ -138,7 +153,7 @@ public class PageGoodController {
 
     /**
      * good page delete
-     * 
+     *
      * @param request
      * @param idArray
      * @return
@@ -149,6 +164,10 @@ public class PageGoodController {
             goodService.update(null, Wrappers.<GoodBean>lambdaUpdate()
                     .set(GoodBean::getIsDelete, -1)
                     .in(GoodBean::getGoodId, idArray));
+
+            // 同时删除对应的bike和bikeimg记录
+            deleteRelatedBikeData(idArray);
+
             // 删除后清除缓存
             clearGoodCache();
             return ResponseFactory.success(String.join(",", idArray));
@@ -177,6 +196,107 @@ public class PageGoodController {
      */
     private void clearGoodCache() {
         caffeineSupport.removePattern(CACHE_PREFIX + "*");
+    }
+
+    /**
+     * 更新相关的bike和bikeimg数据
+     *
+     * @param goodBean 商品信息
+     */
+    private void updateRelatedBikeData(GoodBean goodBean) {
+        try {
+            // 根据goodId生成对应的productId (去掉"g"前缀，加上"p"前缀)
+            String productId = "p" + goodBean.getGoodId().substring(1);
+
+            // 生成detail_html内容
+            String detailHtml = generateDetailHtml(goodBean.getPhotoUrl());
+
+            // 更新bike记录
+            bikeService.update(null, Wrappers.<BikeBean>lambdaUpdate()
+                    .set(BikeBean::getTitle, goodBean.getGoodTitle())
+                    .set(BikeBean::getCategory, goodBean.getPcSymbolId())
+                    .set(BikeBean::getDetailHtml, detailHtml)
+                    .set(BikeBean::getUpdatedAt, new Date())
+                    .eq(BikeBean::getProductId, productId));
+
+            // 更新bikeimg记录 - 更新主图
+            String imageProductId = "i" + goodBean.getGoodId().substring(1);
+            bikeImageService.update(null, Wrappers.<BikeImageBean>lambdaUpdate()
+                    .set(BikeImageBean::getImagePath, goodBean.getListPicUrl())
+                    .eq(BikeImageBean::getProductId, imageProductId)
+                    .eq(BikeImageBean::getIsMain, 1));
+
+            log.debug("Updated related bike data for goodId: {}", goodBean.getGoodId());
+        } catch (Exception e) {
+            log.error("Failed to update related bike data for goodId: " + goodBean.getGoodId(), e);
+        }
+    }
+
+    /**
+     * 删除相关的bike和bikeimg数据
+     *
+     * @param goodIdArray 商品ID数组
+     */
+    private void deleteRelatedBikeData(List<String> goodIdArray) {
+        try {
+            for (String goodId : goodIdArray) {
+                // 根据goodId生成对应的productId
+                String productId = "p" + goodId.substring(1);
+                String imageProductId = "i" + goodId.substring(1);
+
+                // 删除bike记录 (软删除或硬删除，根据业务需求)
+                bikeService.remove(Wrappers.<BikeBean>lambdaQuery()
+                        .eq(BikeBean::getProductId, productId));
+
+                // 删除bikeimg记录
+                bikeImageService.remove(Wrappers.<BikeImageBean>lambdaQuery()
+                        .eq(BikeImageBean::getProductId, imageProductId));
+            }
+
+            log.debug("Deleted related bike data for goodIds: {}", goodIdArray);
+        } catch (Exception e) {
+            log.error("Failed to delete related bike data for goodIds: " + goodIdArray, e);
+        }
+    }
+
+    /**
+     * 生成detail_html内容
+     * 将photoUrl数组转换为HTML格式
+     *
+     * @param photoUrl JSON格式的图片URL数组
+     * @return HTML格式的详情内容
+     */
+    private String generateDetailHtml(String photoUrl) {
+        if (photoUrl == null || photoUrl.trim().isEmpty()) {
+            return "<p><br/></p>";
+        }
+
+        try {
+            // 解析JSON数组
+            List<String> photoUrlList = JSON.parseArray(photoUrl, String.class);
+            if (photoUrlList == null || photoUrlList.isEmpty()) {
+                return "<p><br/></p>";
+            }
+
+            StringBuilder detailHtmlBuilder = new StringBuilder();
+
+            // 为每个图片URL生成HTML段落
+            for (String imageUrl : photoUrlList) {
+                if (imageUrl != null && !imageUrl.trim().isEmpty()) {
+                    detailHtmlBuilder.append("<p style=\"text-align: center;\">")
+                            .append("<img data-src=\"").append(imageUrl).append("\" ")
+                            .append("src=\"https://bodocn-1256485110.cos.ap-beijing.myqcloud.com/images/imgbg.png\" ")
+                            .append("style=\"\"/>")
+                            .append("</p>")
+                            .append("<p><br/></p>");
+                }
+            }
+
+            return detailHtmlBuilder.toString();
+        } catch (Exception e) {
+            log.error("Failed to generate detail HTML from photoUrl: " + photoUrl, e);
+            return "<p><br/></p>";
+        }
     }
 
 }

@@ -242,9 +242,9 @@ public class GoodServiceImpl extends ServiceImpl<GoodDao, GoodBean> implements G
         for (String photoUrl : photoUrlList) {
             detailHtmlBuilder.append("<p style=\"text-align: center;\"><img data-src=\"")
                     .append(photoUrl)
-                    .append("\" src=\"https://bodocn-1256485110.cos.ap-beijing.myqcloud.com/images/imgbg.png\" style=\"\"/></p>");
+                    .append("\" src=\"https://bodocn-1256485110.cos.ap-beijing.myqcloud.com/images/imgbg.png\" style=\"\"/></p>")
+                    .append("<p><br/></p>");
         }
-        detailHtmlBuilder.append("<p><br/></p>");
 
         // 保存bikes记录，新记录的prev_product_id和prev_product_title设为空
         BikeBean bike = new BikeBean();
