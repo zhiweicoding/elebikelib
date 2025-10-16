@@ -51,3 +51,11 @@ management:
   health:
     elasticsearch:
       enabled: false
+
+qiniu:
+  access-key: 6iK1pHSoJwh_vqAE-i6Oz4Hka-iQkotmeHzz3I7O
+  secret-key: IvDlVcDa6KrqTewE1XfWknjqZGrCkm6GWxXypbul
+  bucket: myloveqian
+  domain: https://photo.myloveqian.cn
+  prefix: article/
+  expire: 7200
