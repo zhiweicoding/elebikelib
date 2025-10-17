@@ -1,5 +1,6 @@
 package xyz.zhiweicoding.bike.page;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ import java.util.Map;
  * @date 2025/01/15
  */
 @RestController
-@RequestMapping("/v1/api/qiniu")
+@RequestMapping("/v1/page/qiniu")
 public class PageQiniuController {
 
     private static final Logger log = LoggerFactory.getLogger(PageQiniuController.class);
@@ -33,7 +34,7 @@ public class PageQiniuController {
      * @return 包含token和domain的响应
      */
     @GetMapping("/token")
-    public BaseResponse<Map<String, String>> getUploadToken() {
+    public BaseResponse<Map<String, String>> getUploadToken(HttpServletRequest request) {
         try {
             log.info("请求获取七牛云上传凭证");
             Map<String, String> result = qiniuService.generateUploadToken();
