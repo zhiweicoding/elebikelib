@@ -20,7 +20,7 @@ import java.util.Map;
  * @date 2025/01/15
  */
 @RestController
-@RequestMapping("/v1/page/qiniu")
+@RequestMapping("/v1/api/qiniu")
 public class PageQiniuController {
 
     private static final Logger log = LoggerFactory.getLogger(PageQiniuController.class);
