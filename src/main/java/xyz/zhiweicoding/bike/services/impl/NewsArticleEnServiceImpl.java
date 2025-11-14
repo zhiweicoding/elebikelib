@@ -24,7 +24,7 @@ import java.util.*;
 public class NewsArticleEnServiceImpl extends ServiceImpl<NewsArticleEnDao, NewsArticleEnBean> 
         implements NewsArticleEnService {
 
-    @Autowired
+    @Autowired(required = false)
     private ArabicTranslationSupport translationSupport;
 
     @Override
@@ -97,6 +97,10 @@ public class NewsArticleEnServiceImpl extends ServiceImpl<NewsArticleEnDao, News
 
     @Override
     public Map<String, String> translateArticleById(Integer id, boolean overwriteExisting) {
+        if (translationSupport == null) {
+            throw new RuntimeException("翻译服务未配置，请设置 llm.provider=glm");
+        }
+
         NewsArticleEnBean article = this.getById(id);
         if (article == null) {
             throw new RuntimeException("文章不存在: id=" + id);
