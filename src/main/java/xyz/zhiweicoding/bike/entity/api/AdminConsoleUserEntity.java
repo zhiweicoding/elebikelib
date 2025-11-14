@@ -54,6 +54,7 @@ public class AdminConsoleUserEntity implements Serializable {
     private String title;
     private String group;
     private int adminRole;
+    private String platformType;
     private int notifyCount = 0;
     private int unreadCount = 0;
     private String country;

@@ -151,6 +151,13 @@
             <artifactId>qiniu-java-sdk</artifactId>
             <version>7.13.1</version>
         </dependency>
+
+        <!-- 智谱AI SDK for Arabic Translation -->
+        <dependency>
+            <groupId>ai.z.openapi</groupId>
+            <artifactId>zai-sdk</artifactId>
+            <version>0.0.6</version>
+        </dependency>
     </dependencies>
 
     <build>

@@ -34,7 +34,7 @@ spring:
       read-only: false
   config:
     activate:
-      on-profile:
+      on-profile: dev
 
 mybatis-plus:
   configuration:
@@ -59,3 +59,12 @@ qiniu:
   domain: https://photo.myloveqian.cn
   prefix: article/
   expire: 7200
+
+llm:
+  provider: glm
+  zhipu:
+    api-key: ${LLM_ZHIPU_API_KEY:51f6e8362e0847c28254bc8170024a4e.w5sQL4N7qGVb6iLi}
+    model: glm-4-flash-250414
+  timeout-seconds: 30
+  system-prompt: "You are a professional Arabic translator. Please translate the given English title and HTML body into Modern Standard Arabic. Strictly preserve all HTML tags and attributes, only translate visible text content. Keep links, code blocks, and placeholders unchanged. Output must be valid JSON with keys: title_ar, org_content_ar, content_ar. The content_ar should be a 2-3 sentence Arabic summary (approximately 200-280 characters) without HTML tags."
+  auto-translate-on-write: false

@@ -45,9 +45,11 @@ public class PageUserController {
         try {
 
             String value = String.valueOf(caffeineSupport.get(authorization));
-            LoginBean loginBean = loginService.getOne(Wrappers.<LoginBean>lambdaQuery().eq(LoginBean::getAdminId, value).select(LoginBean::getAdminInfo));
+            LoginBean loginBean = loginService.getOne(Wrappers.<LoginBean>lambdaQuery().eq(LoginBean::getAdminId, value).select(LoginBean::getAdminInfo, LoginBean::getPlatformType));
             String adminInfo = loginBean.getAdminInfo();
             AdminConsoleUserEntity entity = JSON.parseObject(adminInfo, AdminConsoleUserEntity.class);
+            // 设置平台类型
+            entity.setPlatformType(loginBean.getPlatformType());
             return ResponseFactory.success(entity);
         } catch (Exception e) {
             log.error("login q error:{}：", e.getMessage(), e);

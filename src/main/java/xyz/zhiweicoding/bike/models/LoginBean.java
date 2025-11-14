@@ -27,6 +27,7 @@ public class LoginBean implements Serializable {
     private String username;
     private String password;
     private int adminRole;
+    private String platformType;
     private long createTime;
     private long modifyTime;
     private String adminInfo;
@@ -86,6 +87,20 @@ public class LoginBean implements Serializable {
      */
     public void setAdminRole(int adminRole) {
         this.adminRole = adminRole;
+    }
+
+    /**
+     * @return String return the platformType
+     */
+    public String getPlatformType() {
+        return platformType;
+    }
+
+    /**
+     * @param platformType the platformType to set
+     */
+    public void setPlatformType(String platformType) {
+        this.platformType = platformType;
     }
 
     /**
